@@ -39,14 +39,13 @@ method).
 
 The access bits of a capability are determined when the object is
 accessed through the object store.  \seechap{chap-object-store} One of
-the possible key/value pairs associated with the object in the object
-store corresponds to the access permissions in the form of an
-\emph{access control list}.  A user who accesses the object from the
-object store will be checked against the access control list and
-appropriate access bits will be added to the object before it is given
-to the user.  
+the possible attributes associated with the object in the object store
+corresponds to the access permissions in the form of an \emph{access
+  control list}.  A user who accesses the object from the object store
+will be checked against the access control list and appropriate access
+bits will be cleared in the object before it is given to the user.
 
-\section{Protecting system from the users}
+\section{Protecting the system from the users}
 
 In a typical modern operating system, the system is protected from the
 users through the use of a \emph{mode} of execution of the processor,
@@ -72,7 +71,7 @@ its own \emph{address space}, which means that it can not directly
 manipulate \sysname{} capabilities.  Instead, it has to communicate
 with the system through the user of \emph{system calls}.  A
 system-wide object is referred to by such code through an interposing
-\emph{object descriptor}, much like a file descriptor in Unix.  The
-details of this mechanism have not yet been fully determined. 
+\emph{object descriptor}, much like a file descriptor in \unix{}.  The
+details of this mechanism have not yet been fully determined.
 
 

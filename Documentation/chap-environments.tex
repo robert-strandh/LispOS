@@ -42,12 +42,12 @@ still refer to the environment into which it was compiled or loaded.
 This mechanism provides an efficient method of protection.  A user A
 can grant controlled access to part of his or her global environment
 by allowing a user B to execute a function made available to him or
-her through the \emph{object store}.  \seechap{chap-object-store}
-In a traditional modern operating system such as Unix, this kind of
+her through the \emph{object store}.  \seechap{chap-object-store} In a
+traditional modern operating system such as \unix{}, this kind of
 controlled access required the use of the \emph{setuid} mechanism,
 simply because in such a system there is no way to access an object
 other than through the global file system, and the accessing user must
-have the right permissions to access the object. 
+have the right permissions to access the object.
 
 The same mechanism can be used by the system itself to protect objects
 that would be unwise to give users direct access to, such as disks or

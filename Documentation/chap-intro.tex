@@ -284,32 +284,40 @@ The most important aspect of a Lisp operating system is not that all
 the code be written in Lisp, but rather to present a Lisp-like
 interface between users and the system and between applications and
 the system.  It is therefore legitimate to take advantage of some
-existing system (probably Linux or some BSD version) in order to
-provide services such as device drivers, network communication,
-thread scheduling, etc. 
+existing system (probably \linux{} or some \bsd{} version) in order to
+provide services such as device drivers, network communication, thread
+scheduling, etc.
 
 \subsection{Create a Lisp system to be used as basis}
 
-The first step is to create a Common Lisp system that can be used as
-a basis for the Lisp operating system.  It should already allow for
-multiple environments, and it should be available on 64-bit
-platforms.  Preferably, this system should use as little C code as
-possible and interact directly with the system calls of the
-underlying kernel.
+The first step is to create a \cl{} system that can be used as a basis
+for the Lisp operating system.  It should already allow for multiple
+environments, and it should be available on 64-bit platforms.
+Preferably, this system should use as little \clanguage{} code as
+possible and interact directly with the system calls of the underlying
+kernel.
 
 \subsection{Create a single-user system as a \unix{} process}
 
-The next step is to transform the Common Lisp system into an
-operating system in the sense of the API for users and
-applications.  This system would contain the object store, but
-perhaps not access control functionality.
+In parallel with creating a new \cl{} system, it is possible to
+implement and test many of the features of the interface between the
+system and the users, such as the object store (probably without
+access control) using an existing \cl{} system running as a process in
+an ordinary operating system.  
 
-When this step is accomplished, it is possible to write or adapt
-applications such as text editors, inspectors, debuggers, GUI
+The result of this activity would be sufficient to write or adapt
+several applications such as text editors, inspectors, debuggers, GUI
 interface libraries, etc. for the system.
+
+\subsection{Create a multi-user system as a \unix{} process}
+
+With the new \cl{} system complete and the object store implemented,
+it will be possible to create a full multi-user system, including
+protection, as a \unix{} process, where the \unix{} system would play
+the role of a virtual machine, supplying essential services such as
+input/output, networking, etc. 
 
 \subsection{Create device drivers}
 
 The final step is to replace the temporary \unix{} kernel with native
-device drivers for the new system and to turn the system into a full
-multi-user operating system.
+device drivers for the new system.
