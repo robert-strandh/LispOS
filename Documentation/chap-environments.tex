@@ -1,0 +1,55 @@
+\chapter{Environments}
+\label{chap-environments}
+
+Recall that an \emph{environment} is a mapping from \emph{names} to
+\emph{objects}.  This mapping consists of a set of \emph{bindings}. 
+
+When a user is created in the system, a \emph{default global
+  environment} is created for that user.   The global environment of a
+user consists of a \emph{system-wide} environment and a
+\emph{user-specific} environment.
+
+The system-wide environment consists of bindings that are themselves
+immutable (i.e., the user is not allowed to alter the binding) such as
+the binding of the symbol \texttt{cl:length} to the function that
+returns the length of a sequence.  The objects of these bindings are
+also immutable, such as the length function itself.  The system-wide
+environment is the same for every user, allowing the installation of
+software that is immediately visible to all users. 
+
+The user-specific environment consists of bindings that are created by
+the user.  These bindings are of three different kinds:
+
+\begin{itemize}
+\item Bindings created by the user for instance as a result of
+  executing a \texttt{defparameter} or \texttt{defun} form.
+\item Default system-wide bindings that can be altered by the user,
+  such as the value of \texttt{*print-base*}.
+\item Immutable bindings where the \emph{object} can be modified by
+  the user, such as system-defined generic functions to which the user
+  is allowed to add specific methods.  Each user has a private copy of
+  such objects.
+\end{itemize}
+
+When a function or method object is created as a result of calling
+\texttt{compile} on a lambda expression, or as a result of loading a
+\emph{fasl} file, the object is \emph{linked} to the current global
+environment, in that external references are then resolved.  When such
+a function or method object is given to a different user, that
+different user can execute it, but external references in it will
+still refer to the environment into which it was compiled or loaded.
+
+This mechanism provides an efficient method of protection.  A user A
+can grant controlled access to part of his or her global environment
+by allowing a user B to execute a function made available to him or
+her through the \emph{object store}.  \seechap{chap-object-store}
+In a traditional modern operating system such as Unix, this kind of
+controlled access required the use of the \emph{setuid} mechanism,
+simply because in such a system there is no way to access an object
+other than through the global file system, and the accessing user must
+have the right permissions to access the object. 
+
+The same mechanism can be used by the system itself to protect objects
+that would be unwise to give users direct access to, such as disks or
+printers. 
+

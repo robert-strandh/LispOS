@@ -1,0 +1,311 @@
+\chapter{Introduction}
+\pagenumbering{arabic}
+
+\section{What a Lisp operating system is}
+
+A Lisp Operating System (LispOS for short) is not just another
+operating system that happens to be written in Lisp (although that
+would be a good thing in itself).  A LispOS is also an operating
+system that uses the Lisp interactive environment as an inspiration
+for the interface between the user and the system, and between
+applications and the system.
+
+In this document, we give some ideas on what a LispOS might contain,
+how it would be different from existing operating systems, and how
+such a system might be created.
+
+\section{Problems with existing systems}
+
+\subsection{The concept of a \emph{process}}
+
+Most popular existing operating systems are derived from Unix which
+was written in the 1970s.  The computers for which Unix was intended
+has a very small address space; too small for most usable end-user
+applications.  To solve this problem, the creators of Unix used the
+concept of a \emph{process}.  A large application was written so
+that it consisted of several smaller programs, each of which ran in
+its own address space.  These smaller programs would communicate by
+having one application write text to its output stream for another
+application to read.  This method of communication was called
+a \emph{pipe} and a sequence of small applications was called
+a \emph{pipeline}.  As a typical example of a chain of applications,
+consider the pipeline for producing a typeset document (one of the
+main applications for which Unix was designed).  This chain had a
+program for creating tables (called \texttt{tbl}), a program for
+generating pictures (called \texttt{pic}), a program for generating
+equations (called \texttt{eqn}), and of course the typesetting program
+itself (called \texttt{troff}).
+
+Using pipes to communicate between different components of an
+application has several disadvantages:
+
+\begin{itemize}
+\item To communicate complex data structures (such as trees or
+graphs), they must be converted to a stream of bytes by the
+creating component, and it must be analyzed and parsed into an
+equivalent data structure by the using component.  Not only is
+this unparsing/parsing inefficient in terms of computing
+resources, but it is also problematic from a
+software-engineering point of view, because the external format
+must be specified and maintained as a separate aspect of each
+component.
+\item An artificial \emph{order} between the different components is
+imposed, so that components can not work as libraries that other
+components can use in any order.  Sometimes (as in the example
+of the \texttt{troff} chain) the end result of a computation
+depends in subtle ways on the order between the components of
+the chain.  Introducing a new component may require other
+components to be modified.  
+\end{itemize}
+
+It is an interesting observation that in most text books on
+operating systems, the concept of a process is presented as playing
+a central role in operating-system design, whereas it ought to be
+presented as an unfortunate necessity due to the limited address
+space of existing minicomputers in the 1970s.  It is also presented
+as \emph{the} method for obtaining some kind of \emph{security},
+preventing one application from intentionally or accidentally
+modifying the data of some other application.  In reality, there are
+several ways of obtaining such security, and separate address spaces
+should be considered to be a method with too many disadvantages. 
+
+Nowadays, computers have addresses that are 64 bit wide, making it
+possible to address almost 20 exabytes of data.  To get an idea of
+the order of magnitude of such a number, consider a fairly large
+disc that can hold a terabyte of data.  Then 20 million such discs
+can be directly addressed by the processor.  We can thus consider
+the problem of too small an address space to be solved.  
+
+\subsection{Hierarchical file systems}
+
+Existing operating system come with a \emph{hierarchical file
+system}.  There are two significant problems,
+namely \emph{hierarchical} and \emph{file}.
+
+The \emph{ hierarchy} is also a concept that dates back to the
+1970s, and it was considered a vast improvement on flat file
+systems.  However, as some authors%
+\footnote{See
+  \texttt{http://www.shirky.com/writings/ontology\_overrated.html}}
+explain, most things are not naturally hierarchical.  A hierarchical
+organization imposes an artificial order between names.  Whether a
+document is called \texttt{Lisp/Programs/2013/stuff},
+\texttt{Programs/Lisp/2013/stuff}, or something else like
+\texttt{2013/Programs/Lisp/stuff}, is usually not important.
+
+The problem with a \emph{file} is that it is only a sequence of
+bytes with no structure.  This lack of structure fits the Unix pipe
+model very well, because intermediate steps between individual
+software components can be saved to a file without changing the
+result.  But it also means that in order for complex data structures
+to be stored in the file system, they have to be transformed into a
+sequence of bytes.  And whenever such a structure needs to be
+modified by some application, it must again be parsed and
+transformed into an in-memory structure.
+
+\subsection{Distinction between primary and secondary memory}
+
+Current system (at least for desktop computers) make a very clear
+distinction between primary and secondary memory.  Not only are the
+two not the same, but they also have totally different semantics:
+\begin{itemize}
+\item Primary memory is \emph{volatile}.  When power is turned off,
+    whatever was in primary memory is lost.
+    \item Secondary memory is \emph{permanent}.  Stored data will not
+    disappear when power is turned off.
+\end{itemize}
+
+This distinction coupled with the semantics of the two memories
+creates a permanent conundrum for the user of most applications, in
+that if current application data is \emph{not} saved, then it will
+be lost in case of power loss, and if it \emph{is} saved, then
+previously saved data is forever lost. 
+
+Techniques were developed as early in the 1960s for presenting
+primary and secondary memory as a single abstraction to the user.
+For example, the Multics system had a single hierarchy of fixed-size
+byte arrays (called segments) that served as permanent storage, but
+that could also be treated as any in-memory array by applications.
+As operating systems derived from Unix became widespread, these
+techniques were largely forgotten. 
+
+\section{Objectives for a Lisp operating system}
+
+The three main objectives of a Lisp operating system correspond to
+solutions to the two main problems with exiting systems as indicated
+in the previous section.
+
+\subsection{Single address space}
+
+Instead of each application having its own address space, we propose
+that all applications share a single large address space.  This way,
+applications can share data simply by passing pointers around,
+because a pointer is globally valid, unlike pointers in current
+operating systems. 
+
+Clearly, if there is a single address space shared by all
+applications, there needs to be a different mechanism to
+ensure \emph{protection} between them so that one application can
+not intentionally or accidentally destroy the data of another
+application.  Most high-level programming languages (in particular
+Lisp, but also Java, and many more) propose a solution to this
+problem by simply not allowing users to execute arbitrary machine
+code.  Instead, they allow only code that has been produced from the
+high-level notation of the language and which excludes arbitrary
+pointer arithmetic so that the application can only address its own
+data.  This technique is sometimes called "trusted compiler".  
+
+It might sometimes be desirable to write an application in a
+low-level language like C or even assembler, or it might be
+necessary to run applications that have been written for other
+systems.  Such applications could co-exist with the normal ones, but
+they would have to work in their own address space as with current
+operating systems, and with the same difficulties of communicating
+with other applications.  
+
+\subsection{Object store based on tags}
+
+Instead of a hierarchical file system, we propose an \emph{object
+  store} which can contain any objects.  If a file (i.e. a
+sequence of bytes) is desired, it would be stored as an array of
+bytes.
+
+Instead of organizing the objects into a hierarchy, objects in the
+store can optionally be associated with an arbitrary number
+of \emph{tags}.  These tags are \emph{key/value} pairs, such as for
+example the date of creation of the archive entry, the creator (a
+user) of the archive entry, and the \emph{access permissions} for
+the entry.  Notice that tags are not properties of the objects
+themselves, but only of the archive entry that allows an object to
+be accessed.  Some tags might be derived from the contents of the
+object being stored such as the \emph{sender} or the \emph{date} of
+an email message.  It should be possible to accomplish most searches
+of the store without accessing the objects themselves, but only the
+tags.  Occasionally, contents must be accessed such as when a raw
+search of the contents of a text is wanted. 
+
+For a more detailed description of the object store, see
+\refChap{chap-object-store}. 
+
+It is sometimes desirable to group related objects together as
+with \emph{directories} of current operating systems.  Should a user
+want such a group, it would simply be another object (say instances
+of the class \texttt{directory}) in the store.  Users who can not
+adapt to a non-hierarchical organization can even store such
+directories as one of the objects inside another directory.
+
+Here are some examples of possible keyword/value pairs, how they
+might be used, and what kinds of values are permitted:
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+
+When (a pointer to) an object is returned to a user as a result of a
+search of the object store, it is actually similar to what is called
+a "capability" in the operating-system literature.  Such a
+capability is essentially only a pointer with a few bits indicating
+what \emph{access rights} the user has to the objects.  Each creator
+may interpret the contents of those bits as he or she likes, but
+typically they would be used to restrict access, so that for
+instance executing a \emph{reader} method is allowed, but executing
+a \emph{writer} method is not.
+
+\subsection{Single memory abstraction}
+
+Instead of two different memory abstractions (primary and
+secondary), the Lisp operating system would contain a single
+abstraction which looks like any interactive Lisp system, except
+that data is permanent.
+
+Since data is permanent, application writers are encouraged to
+provide a sophisticated \emph{undo} facility.  
+
+The physical main (semiconductor) memory of the computer simply acts
+as a \emph{cache} for the disk(s), so that the address of an object
+uniquely determines where on the disk it is stored.  The cache is
+managed as an ordinary \emph{virtual memory} with existing
+algorithms. 
+
+\subsection{Other features}
+
+\subsubsection{Crash proof (maybe)}
+
+There is extensive work on crash-proof systems, be it operating
+systems or data base systems.  In our opinion, this work is
+confusing in that the objective is not clearly stated.
+
+Sometimes the objective is stated as the desire that no data be lost
+when power is lost.  But the solution to that problem already exists
+in every laptop computer; it simply provides a \emph{battery} that
+allow the system to continue to work, or to be \emph{shut down} in a
+controlled way. 
+
+Other times, the objective is stated as a protection against
+defective software, so that data is stored at regular intervals
+(checkpointing) perhaps combined with a \emph{transaction log} so
+that the state of the system immediately before a crash can always
+be recovered.  But it is very hard to protect oneself against
+defective software.  There can be defects in the checkpointing code
+or in the code for logging transactions, and there can be defects in
+the underlying file system.  We believe that it is a better use of
+developer time to find and eliminate defects than to aim for a
+recovery as a result of existing defects.
+
+\subsubsection{Multiple simultaneous environments}
+
+To allow for a user to add methods to standard generic functions
+(such as \texttt{print-object}) without interfering with other
+users, we suggest that each user gets a different \emph{global
+environment}.  The environment maps \emph{names}
+to \emph{objects} such as functions, classes, types, packages, and
+more.  Immutable objects (such as the \texttt{common-lisp} package)
+can exist in several different environments simultaneously, but
+objects (such as the generic function \texttt{print-object} would be
+different in different environments.
+
+Multiple environments would also provide more safety for users in
+that if a user inadvertently removes some system feature, then it
+can be recovered from a default environment, and in the worst case a
+fresh default environment could be installed for a user who
+inadvertently destroyed large parts of his or her environment. 
+
+Finally, multiple environments would simplify experimentation with
+new features without running the risk of destroying the entire
+system.  Different versions of a single package could exist in
+different environments. 
+
+\section{How to accomplish it}
+
+The most important aspect of a Lisp operating system is not that all
+the code be written in Lisp, but rather to present a Lisp-like
+interface between users and the system and between applications and
+the system.  It is therefore legitimate to take advantage of some
+existing system (probably Linux or some BSD version) in order to
+provide services such as device drivers, network communication,
+thread scheduling, etc. 
+
+\subsection{Create a Lisp system to be used as basis}
+
+The first step is to create a Common Lisp system that can be used as
+a basis for the Lisp operating system.  It should already allow for
+multiple environments, and it should be available on 64-bit
+platforms.  Preferably, this system should use as little C code as
+possible and interact directly with the system calls of the
+underlying kernel.
+
+\subsection{Create a single-user system as a Unix process}
+
+The next step is to transform the Common Lisp system into an
+operating system in the sense of the API for users and
+applications.  This system would contain the object store, but
+perhaps not access control functionality.
+
+When this step is accomplished, it is possible to write or adapt
+applications such as text editors, inspectors, debuggers, GUI
+interface libraries, etc. for the system.
+
+\subsection{Create device drivers}
+
+The final step is to replace the temporary Unix kernel with native
+device drivers for the new system and to turn the system into a full
+multi-user operating system.

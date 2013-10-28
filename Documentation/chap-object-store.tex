@@ -1,0 +1,110 @@
+\chapter{Object store}
+\label{chap-object-store}
+
+The \emph{object store} is a system-wide database containing
+any kind of objects.  Each object is a \emph{capability}. 
+
+An object in the store can optionally be associated with a certain
+number of \emph{attributes}.  An attribute is a \emph{pair} consisting
+of the \emph{attribute name} and the \emph{attribute value}.  The
+attribute name is a symbol in the \texttt{keyword} package.  The
+attribute value can be any object. 
+
+\begin{tabularx}{\linewidth}%
+{|>{\setlength\hsize{.2\hsize}}X|%
+  >{\setlength\hsize{.8\hsize}}X|}
+\hline
+Keyword & Possible-values\\
+\hline\hline
+\textbf{category} &
+
+The nature of the object such
+as \textbf{movie}, \textbf{music}, \textbf{article}, \textbf{book}, \textbf{user
+manual}, \textbf{dictionary}, \textbf{course}, \textbf{lecture},
+\textbf{recipe}, \textbf{program}, \textbf{bank statement},
+\textbf{email}.  These would be chosen from an
+editable set that is defined per user.\\
+\hline
+\textbf{name} &
+
+A string that is displayed with the object, such as "A Dramatic
+Turn of Events", "Three seasons", "Alternative energy".\\
+\hline
+\textbf{author} &
+
+An object identifying a person, an organization, a company,
+etc. \\
+\hline
+\textbf{genre} &
+
+\textbf{progressive
+metal}, \textbf{science}, \textbf{algorithms}, \textbf{garbage
+collection}, \textbf{game}, \textbf{programming language
+implementation}, \textbf{operating system}.  These would be
+chosen from an editable set that is defined per user.\\
+\hline
+\textbf{format} &
+
+This attribute can be used to identify the file type of documents such
+as \textbf{PDF}, \textbf{ogg/vorbis}, \textbf{MPEG4} \textbf{PNG}, in
+which case the attribute can be assigned automatically, but also to
+identify the source format of files in a directory containing
+things like articles or user manuals, for
+example \textbf{LaTeX}, \textbf{Texinfo}, \textbf{HTML}.  These would
+be chosen from an editable set that is defined per user. \\
+\hline
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}%
+{|>{\setlength\hsize{.2\hsize}}X|%
+  >{\setlength\hsize{.8\hsize}}X|}
+\hline
+Keyword & Possible-values\\
+\hline\hline
+\textbf{date of creation} &
+
+A date interval.\\
+\hline
+\textbf{composer} &
+
+An object representing a person.  On a compilation album there
+can be more than one attribute of this kind. \\
+\hline
+\textbf{language} &
+
+An object representing a natural language such
+as \textbf{English}, \textbf{Vietnamese}, or a programming languages
+such as \textbf{Lisp}, \textbf{Python}. These would
+be chosen from an editable set that is defined per user.  If
+appropriate, a document can have several of these attributes, for
+instance if some program uses multiple programming languages, or
+if a document is written using several languages, such as a
+dictionary. \\
+\hline
+\textbf{duration} &
+
+An object representing a duration. \\
+\hline
+\textbf{source control} &
+ 
+\textbf{GIT}, \textbf{SVN}, \textbf{CVS}, \textbf{darks}, etc.  These
+would be chosen from an editable set that is defined per user.\\
+\hline
+\end{tabularx}
+
+In a typical operating system installation, there are many fairly
+large objects such as movies, music files, pictures, etc.  The amount
+data associated with such an object that would be stored in the object
+store is typically very small compared to the object itself.  Even a
+fairly modest text file probably has $10^4 -- 10^5$ characters in it,
+whereas the meta-data probably takes up no more than $10^2 -- 10^3$
+bytes.  It is therefore likely that the entire object store will fit
+in main memory.  Scanning the entire object store would then take at
+most a few second of CPU time.  For better performance, one or more
+\emph{indexes} could be created.  The objects could for instance be
+divided by \emph{category}.
+
+Searching the object store amounts to defining a \emph{filter},
+i.e. a function that, given a set of keyword/value pairs returns
+\emph{true} if and only if the corresponding object should be included
+in the search result. 

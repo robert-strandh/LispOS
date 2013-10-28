@@ -1,0 +1,78 @@
+\chapter{Protection}
+\label{chap-protection}
+
+There are two kinds of protection that are important in an operating
+system:
+
+\begin{itemize}
+\item \emph{protecting different users from each other}.  A user A
+  should not be able to access or destroy the data of some other user
+  B, other than if B explicitly permits it, and then only in ways that
+  are acceptable to B.
+\item \emph{protecting the system from the users}.  Users should be
+  able to access system resources such as memory and peripherals only
+  in controlled ways, so as to guarantee the integrity of the system.
+\end{itemize}
+
+\section{Protecting users from each other}
+
+We use a combination of \emph{access control lists} and
+\emph{capabilities}.  All heap-allocated objects except \texttt{cons}
+cells and (heap-allocated) numbers are manipulated through a
+\emph{tagged pointer}.  In addition to containing a type tag, the
+pointer also contains an \emph{access tag}.  The access tag consists
+of the 4 most-significant bits of a 64-bit pointer.  Before a pointer
+is used to fetch an object from memory, the access bits are cleared.
+A primitive operation to fetch the access tag of a pointer is
+available to any user code.  Each of the 4 bits represents a potential
+\emph{access restriction}, the significance of which is up to the
+programmer.  A function that wishes to restrict permission to some
+object can test the corresponding access bit and signal an error if
+that bit is set.
+
+The author of some complex data structure may for instance grant
+access to it only to certain other users.  This would be done by
+interpreting one of the access bits as \emph{read permission}, and by
+having generic functions that access the data structures check that
+this bit has the desired value (for instance in a \texttt{:before}
+method). 
+
+The access bits of a capability are determined when the object is
+accessed through the object store.  \seechap{chap-object-store} One of
+the possible key/value pairs associated with the object in the object
+store corresponds to the access permissions in the form of an
+\emph{access control list}.  A user who accesses the object from the
+object store will be checked against the access control list and
+appropriate access bits will be added to the object before it is given
+to the user.  
+
+\section{Protecting system from the users}
+
+In a typical modern operating system, the system is protected from the
+users through the use of a \emph{mode} of execution of the processor,
+which can be either \emph{user mode} or \emph{supervisor mode}.
+Certain instructions are restricted to supervisor mode, such as
+instructions for input/output or for remapping the address space. 
+
+In \sysname{}, the normal mode of execution is \emph{supervisor mode}.
+The code executed by the user is translated to machine code by a
+\emph{trusted compiler} which is known not to generate code that, if
+executed, might represent a risk to the integrity of the system.
+Since no remapping of the address space is required as a result of an
+\emph{interrupt} or a \emph{trap}, such events can be handled very
+quickly. 
+
+Occasionally, it might be useful to write or install some software
+that is compiled to machine code by some compiler that can not be
+trusted.  The result of such a compilation or installation is a single
+(possibly large) Lisp function.  When this function is executed, the
+mode of execution is switched to \emph{user mode}.  As with
+traditional modern operating systems, the code of such software has
+its own \emph{address space}, which means that it can not directly
+manipulate \sysname{} capabilities.  Instead, it has to communicate
+with the system through the user of \emph{system calls}.  A
+system-wide object is referred to by such code through an interposing
+\emph{object descriptor}, much like a file descriptor in Unix.  The
+details of this mechanism have not yet been fully determined. 
+
+
