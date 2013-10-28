@@ -5,10 +5,10 @@
 
 A Lisp Operating System (LispOS for short) is not just another
 operating system that happens to be written in Lisp (although that
-would be a good thing in itself).  A LispOS is also an operating
-system that uses the Lisp interactive environment as an inspiration
-for the interface between the user and the system, and between
-applications and the system.
+would be a good thing in itself).  For the purpose of this document, a
+LispOS is also an operating system that uses the Lisp interactive
+environment as an inspiration for the interface between the user and
+the system, and between applications and the system.
 
 In this document, we give some ideas on what a LispOS might contain,
 how it would be different from existing operating systems, and how
@@ -18,10 +18,10 @@ such a system might be created.
 
 \subsection{The concept of a \emph{process}}
 
-Most popular existing operating systems are derived from Unix which
-was written in the 1970s.  The computers for which Unix was intended
-has a very small address space; too small for most usable end-user
-applications.  To solve this problem, the creators of Unix used the
+Most popular existing operating systems are derived from \unix{} which
+was written in the 1970s.  The computers for which \unix{} was intended
+had a very small address space; too small for most usable end-user
+applications.  To solve this problem, the creators of \unix{} used the
 concept of a \emph{process}.  A large application was written so
 that it consisted of several smaller programs, each of which ran in
 its own address space.  These smaller programs would communicate by
@@ -30,14 +30,14 @@ application to read.  This method of communication was called
 a \emph{pipe} and a sequence of small applications was called
 a \emph{pipeline}.  As a typical example of a chain of applications,
 consider the pipeline for producing a typeset document (one of the
-main applications for which Unix was designed).  This chain had a
+main applications for which \unix{} was designed).  This chain had a
 program for creating tables (called \texttt{tbl}), a program for
 generating pictures (called \texttt{pic}), a program for generating
 equations (called \texttt{eqn}), and of course the typesetting program
 itself (called \texttt{troff}).
 
-Using pipes to communicate between different components of an
-application has several disadvantages:
+Using \unix{}-style pipes to communicate between different components of
+an application has several disadvantages:
 
 \begin{itemize}
 \item To communicate complex data structures (such as trees or
@@ -58,6 +58,10 @@ the chain.  Introducing a new component may require other
 components to be modified.  
 \end{itemize}
 
+Pipes also have some advantages though.  In particular, they provide a
+\emph{synchronization} mechanism between programs, making very easy to
+implement producer/consumer control structures.
+
 It is an interesting observation that in most text books on
 operating systems, the concept of a process is presented as playing
 a central role in operating-system design, whereas it ought to be
@@ -70,11 +74,14 @@ several ways of obtaining such security, and separate address spaces
 should be considered to be a method with too many disadvantages. 
 
 Nowadays, computers have addresses that are 64 bit wide, making it
-possible to address almost 20 exabytes of data.  To get an idea of
-the order of magnitude of such a number, consider a fairly large
-disc that can hold a terabyte of data.  Then 20 million such discs
-can be directly addressed by the processor.  We can thus consider
-the problem of too small an address space to be solved.  
+possible to address almost 20 exabytes of data.  To get an idea of the
+order of magnitude of such a number, consider that a fairly large disc
+that can hold a terabyte of data.  Then each byte of 20 million such
+discs can be directly addressed by the processor.  We can thus
+consider the problem of too small an address space to be solved.  The
+design of \sysname{} takes advantage of this large address space to
+find better solutions to the problems that processes were intended to
+solve.
 
 \subsection{Hierarchical file systems}
 
@@ -94,7 +101,7 @@ document is called \texttt{Lisp/Programs/2013/stuff},
 \texttt{2013/Programs/Lisp/stuff}, is usually not important.
 
 The problem with a \emph{file} is that it is only a sequence of
-bytes with no structure.  This lack of structure fits the Unix pipe
+bytes with no structure.  This lack of structure fits the \unix{} pipe
 model very well, because intermediate steps between individual
 software components can be saved to a file without changing the
 result.  But it also means that in order for complex data structures
@@ -123,10 +130,10 @@ previously saved data is forever lost.
 
 Techniques were developed as early in the 1960s for presenting
 primary and secondary memory as a single abstraction to the user.
-For example, the Multics system had a single hierarchy of fixed-size
+For example, the \multics{} system had a single hierarchy of fixed-size
 byte arrays (called segments) that served as permanent storage, but
 that could also be treated as any in-memory array by applications.
-As operating systems derived from Unix became widespread, these
+As operating systems derived from \unix{} became widespread, these
 techniques were largely forgotten. 
 
 \section{Objectives for a Lisp operating system}
@@ -144,16 +151,16 @@ because a pointer is globally valid, unlike pointers in current
 operating systems. 
 
 Clearly, if there is a single address space shared by all
-applications, there needs to be a different mechanism to
-ensure \emph{protection} between them so that one application can
-not intentionally or accidentally destroy the data of another
-application.  Most high-level programming languages (in particular
-Lisp, but also Java, and many more) propose a solution to this
-problem by simply not allowing users to execute arbitrary machine
-code.  Instead, they allow only code that has been produced from the
-high-level notation of the language and which excludes arbitrary
-pointer arithmetic so that the application can only address its own
-data.  This technique is sometimes called "trusted compiler".  
+applications, there needs to be a different mechanism to ensure
+\emph{protection} between them so that one application can not
+intentionally or accidentally destroy the data of another application.
+Many high-level programming languages (in particular \lisp{}, but
+others as well) propose a solution to this problem by simply not
+allowing users to execute arbitrary machine code.  Instead, they allow
+only code that has been produced from the high-level notation of the
+language and which excludes arbitrary pointer arithmetic so that the
+application can only address its own data.  This technique is
+sometimes called "trusted compiler".
 
 It might sometimes be desirable to write an application in a
 low-level language like C or even assembler, or it might be
@@ -163,7 +170,7 @@ they would have to work in their own address space as with current
 operating systems, and with the same difficulties of communicating
 with other applications.  
 
-\subsection{Object store based on tags}
+\subsection{Object store based on attributes}
 
 Instead of a hierarchical file system, we propose an \emph{object
   store} which can contain any objects.  If a file (i.e. a
@@ -172,16 +179,16 @@ bytes.
 
 Instead of organizing the objects into a hierarchy, objects in the
 store can optionally be associated with an arbitrary number
-of \emph{tags}.  These tags are \emph{key/value} pairs, such as for
+of \emph{attributes}.  These attributes are \emph{key/value} pairs, such as for
 example the date of creation of the archive entry, the creator (a
 user) of the archive entry, and the \emph{access permissions} for
-the entry.  Notice that tags are not properties of the objects
+the entry.  Notice that attributes are not properties of the objects
 themselves, but only of the archive entry that allows an object to
-be accessed.  Some tags might be derived from the contents of the
+be accessed.  Some attributes might be derived from the contents of the
 object being stored such as the \emph{sender} or the \emph{date} of
 an email message.  It should be possible to accomplish most searches
 of the store without accessing the objects themselves, but only the
-tags.  Occasionally, contents must be accessed such as when a raw
+attributes.  Occasionally, contents must be accessed such as when a raw
 search of the contents of a text is wanted. 
 
 For a more detailed description of the object store, see
@@ -193,12 +200,6 @@ want such a group, it would simply be another object (say instances
 of the class \texttt{directory}) in the store.  Users who can not
 adapt to a non-hierarchical organization can even store such
 directories as one of the objects inside another directory.
-
-Here are some examples of possible keyword/value pairs, how they
-might be used, and what kinds of values are permitted:
-
-\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-
 
 When (a pointer to) an object is returned to a user as a result of a
 search of the object store, it is actually similar to what is called
@@ -253,15 +254,15 @@ recovery as a result of existing defects.
 
 \subsubsection{Multiple simultaneous environments}
 
-To allow for a user to add methods to standard generic functions
-(such as \texttt{print-object}) without interfering with other
-users, we suggest that each user gets a different \emph{global
-environment}.  The environment maps \emph{names}
-to \emph{objects} such as functions, classes, types, packages, and
-more.  Immutable objects (such as the \texttt{common-lisp} package)
-can exist in several different environments simultaneously, but
-objects (such as the generic function \texttt{print-object} would be
-different in different environments.
+To allow for a user to add methods to standard generic functions (such
+as \texttt{print-object}) without interfering with other users, we
+suggest that each user gets a different \emph{global environment}.
+The environment maps \emph{names} to \emph{objects} such as functions,
+classes, types, packages, and more.  Immutable objects (such as the
+\texttt{common-lisp} package) can exist in several different
+environments simultaneously, but other objects (such as the generic
+function \texttt{print-object}) would be different in different
+environments.
 
 Multiple environments would also provide more safety for users in
 that if a user inadvertently removes some system feature, then it
@@ -272,7 +273,10 @@ inadvertently destroyed large parts of his or her environment.
 Finally, multiple environments would simplify experimentation with
 new features without running the risk of destroying the entire
 system.  Different versions of a single package could exist in
-different environments. 
+different environments.
+
+For more details on multiple environments, see
+\refChap{chap-environments}.
 
 \section{How to accomplish it}
 
@@ -293,7 +297,7 @@ platforms.  Preferably, this system should use as little C code as
 possible and interact directly with the system calls of the
 underlying kernel.
 
-\subsection{Create a single-user system as a Unix process}
+\subsection{Create a single-user system as a \unix{} process}
 
 The next step is to transform the Common Lisp system into an
 operating system in the sense of the API for users and
@@ -306,6 +310,6 @@ interface libraries, etc. for the system.
 
 \subsection{Create device drivers}
 
-The final step is to replace the temporary Unix kernel with native
+The final step is to replace the temporary \unix{} kernel with native
 device drivers for the new system and to turn the system into a full
 multi-user operating system.

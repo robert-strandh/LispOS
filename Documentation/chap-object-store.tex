@@ -107,4 +107,7 @@ divided by \emph{category}.
 Searching the object store amounts to defining a \emph{filter},
 i.e. a function that, given a set of keyword/value pairs returns
 \emph{true} if and only if the corresponding object should be included
-in the search result. 
+in the search result.  The result is returned to the user in the form
+of a \emph{directory object} which is a list of \emph{object entries}
+where each entry contains the object itself and the attributes of the
+object from the store, if any.
