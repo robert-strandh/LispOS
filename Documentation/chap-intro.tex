@@ -238,7 +238,7 @@ confusing in that the objective is not clearly stated.
 Sometimes the objective is stated as the desire that no data be lost
 when power is lost.  But the solution to that problem already exists
 in every laptop computer; it simply provides a \emph{battery} that
-allow the system to continue to work, or to be \emph{shut down} in a
+allows the system to continue to work, or to be \emph{shut down} in a
 controlled way. 
 
 Other times, the objective is stated as a protection against
@@ -259,7 +259,12 @@ as \texttt{print-object}) without interfering with other users, we
 suggest that each user gets a different \emph{global environment}.
 The environment maps \emph{names} to \emph{objects} such as functions,
 classes, types, packages, and more.  Immutable objects (such as the
-\texttt{common-lisp} package) can exist in several different
+\texttt{common-lisp} package)%
+\footnote{The \texttt{common-lisp} package is probably a bad example
+  of an immutable object, because it could very well be necessary to
+  make modifications to it on a per-user basis as a result of the
+  installation of different software systems.}
+can exist in several different
 environments simultaneously, but other objects (such as the generic
 function \texttt{print-object}) would be different in different
 environments.
