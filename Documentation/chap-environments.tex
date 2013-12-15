@@ -12,7 +12,17 @@ user consists of a \emph{system-wide} environment and a
 The system-wide environment consists of bindings that are themselves
 immutable (i.e., the user is not allowed to alter the binding) such as
 the binding of the symbol \texttt{cl:length} to the function that
-returns the length of a sequence.  The objects of these bindings are
+returns the length of a sequence.%
+\footnote{It may be necessary to allow the user to change bindings
+  such as the one of \texttt{cl:length} to the function that returns
+  the length of a sequence.  In fact, it may be necessary to allow the
+  user to modify every binding, in which case the global environment
+  for a user contains no \emph{system-wide} environment.
+  Alternatively, the system-wide environment would be reduced to a
+  small set of bindings.  Perhaps bindings that allow the user to
+  recover after destroying his or her environment should be stored
+  there. }
+The objects of these bindings are
 also immutable, such as the length function itself.  The system-wide
 environment is the same for every user, allowing the installation of
 software that is immediately visible to all users. 
@@ -31,6 +41,36 @@ the user.  These bindings are of three different kinds:
   such objects.
 \end{itemize}
 
+The environment contains the following mappings:%
+\footnote{I may have forgotten some mappings that are part of the
+  global environment.}
+
+
+\begin{itemize}
+\item Mappings from names to \emph{packages} as managed by
+  \texttt{make-package}, \texttt{delete-package}, \texttt{defpackage},
+  etc. 
+\item Mappings from names to \emph{function objects}, as managed by
+  \texttt{symbol-function}, \texttt{(setf symbol-function)},
+  \texttt{fdefinition}, and \texttt{(setf fdefinition)}.
+\item Mappings from names to \emph{macro functions}, as managed by 
+\texttt{macro-function} and \texttt{(setf macro-function)}.
+\item Mappings from names to compiler macros, as managed by
+  \texttt{compiler-macro-function} and \texttt{(setf
+    compiler-macro-function)}. 
+\item Mappings from names to \emph{classes} as managed by
+  \texttt{find-class}, \texttt{(setf find-class)}, \texttt{defclass},
+  \texttt{defstruct}, \texttt{define-condition}, etc. 
+\item Mappings from names to \emph{type definitions} established by
+  \texttt{deftype}. 
+\item Mappings from names to \emph{global symbol macros} defined by
+  \texttt{define-symbol-macro}.
+\item Mappings from names to \emph{constant variables} defined by
+  \texttt{defconstant}.
+\item Mappings from names to \emph{special variables} defined by
+  \texttt{(proclaim special)}, \texttt{defvar}, etc. 
+\end{itemize}
+
 When a function or method object is created as a result of calling
 \texttt{compile} on a lambda expression, or as a result of loading a
 \emph{fasl} file, the object is \emph{linked} to the current global
@@ -38,6 +78,11 @@ environment, in that external references are then resolved.  When such
 a function or method object is given to a different user, that
 different user can execute it, but external references in it will
 still refer to the environment into which it was compiled or loaded.
+
+Notice that methods are not in themselves part of the environment.
+When we say that a method is \emph{linked} to the current global
+environment, we just mean that references to symbols within that
+method are resolved in the current global environment.  
 
 This mechanism provides an efficient method of protection.  A user A
 can grant controlled access to part of his or her global environment
