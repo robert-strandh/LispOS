@@ -1,0 +1,17 @@
+\chapter{Device drivers}
+
+\section{Introduction}
+
+The purpose of a device driver is to act as an intermediate layer
+between an operating-specific API that is common for a group of
+similar devices and vendor-specific interfaces for individual types of
+devices. 
+
+An important part of writing device drivers for a Lisp operating
+system is therefore to specify the different groups of devices and the
+corresponding operating-specific API for each group.%
+\footnote{As everything else in this document, this chapter is open to
+  discussion.  More so here, because I have no prior experience in
+  defining device-driver APIs. -- RS}
+
+\section{Disk drivers}
