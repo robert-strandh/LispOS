@@ -63,3 +63,14 @@ process will be suspended until the transfer is complete.
 If \textit{hang} is \emph{false} the call will return a \emph{time
   stamp}, which is a fixnum that can later be used in an invocation of
 the \texttt{wait} function.
+
+\Defgeneric {wait} {disk time-stamp \key (hang t)}
+
+Wait for a transfer to complete.  If the transfer is already complete,
+then this function returns immediately.  If not, then the current
+process is suspended until the transfer is complete. 
+
+If \textit{hang} is \emph{true} (the default), then the current
+process will be suspended until the transfer is complete.
+If \textit{hang} is \emph{false}, then \texttt{wait} will return
+\emph{true} if the transfer is complete, and \emph{false} otherwise. 
