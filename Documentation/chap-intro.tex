@@ -322,9 +322,14 @@ protection, as a \unix{} process, where the \unix{} system would play
 the role of a virtual machine, supplying essential services such as
 input/output, networking, etc. 
 
-\subsection{Create device drivers and more}
+\subsection{Create a bootable system}
 
 The final step is to replace the temporary \unix{} kernel with native
 device drivers, and to write the code for required system services
 such as the \emph{thread scheduler}, \emph{synchronization
-  primitives}, etc.
+  primitives}, etc.  Such a system could initially run in an emulator
+such as QEMU in order to facilitate debugging.  Integration with an
+existing operating system could be accomplished by communication with
+the host operating system through its X11 server, which would avoid
+the necessity of a native display server for the Lisp operating
+system. 
