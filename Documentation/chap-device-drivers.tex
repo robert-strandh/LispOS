@@ -15,3 +15,51 @@ corresponding operating-specific API for each group.%
   defining device-driver APIs. -- RS}
 
 \section{Disk drivers}
+
+\Defprotoclass{disk}
+
+This is the root class of all disk device classes.  
+
+\Defclass{standard-disk}
+
+\Defgeneric {write-block} {disk block address \key (hang t)}
+
+Write a block of data to the disk.  The parameter \textit{disk} is an
+instance of the class \textit{disk}, and \textit{block} is a a vector
+of type \texttt{(simple-array (unsigned-byte 8) (*))}.  The size of
+\textit{block} must be a power of 2, and the address must be aligned
+to the size of \textit{block}.  If the size of \textit{block} is
+\emph{smaller} than the native block size of \textit{disk} then a
+request to read an entire native block will be issued and the result
+will be stored in a temporary location.  Part of the native block in
+the temporary location will then be overwritten by the contents of
+\textit{block}.  Finally, the contents of the temporary location will
+be written to the device.  If the size of \textit{block} is
+\emph{greater} than the native block size of \textit{disk}, then
+several native blocks will be written from \textit{block}.
+
+If \textit{hang} is \emph{true} (the default), then the current
+process will be suspended until the transfer is complete.
+If \textit{hang} is \emph{false} the call will return a \emph{time
+  stamp}, which is a fixnum that can later be used in an invocation of
+the \texttt{wait} function.
+
+\Defgeneric {read-block} {disk block address \key (hang t)}
+
+Write a block of data to the disk.  The parameter \textit{disk} is an
+instance of the class \textit{disk}, and \textit{block} is a a vector
+of type \texttt{(simple-array (unsigned-byte 8) (*))}.  The size of
+\textit{block} must be a power of 2, and the address must be aligned
+to the size of \textit{block}.  If the size of \textit{block} is
+\emph{smaller} than the native block size of \textit{disk} then a
+request to read an entire native block will be issued and the result
+will be stored in a temporary location.  Then a part of that native
+block will be copied to \textit{block}.  If the size of \textit{block}
+is \emph{greater} than the native block size of \textit{disk}, then
+several native blocks will be read into \textit{block}.
+
+If \textit{hang} is \emph{true} (the default), then the current
+process will be suspended until the transfer is complete.
+If \textit{hang} is \emph{false} the call will return a \emph{time
+  stamp}, which is a fixnum that can later be used in an invocation of
+the \texttt{wait} function.
