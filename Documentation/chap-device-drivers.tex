@@ -18,7 +18,13 @@ corresponding operating-specific API for each group.%
 
 \Defprotoclass{disk}
 
-This is the root class of all disk device classes.  
+This is the root class of all disk device classes.  A disk is a device
+that stores data in \emph{blocks}.  The size of a block varies between
+different types of disks.  Blocks are numbered from $0$ to $N-1$ where
+$N$ is the total number of blocks on this device.  Because of the
+existence of bad blocks, $N$ may be smaller than the nominal size of
+the device.  Nevertheless, the driver and the disk controller conspire
+to present the disk as contiguous sequence of blocks. 
 
 \Defclass{standard-disk}
 
