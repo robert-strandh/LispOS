@@ -28,6 +28,17 @@ to present the disk as contiguous sequence of blocks.
 
 \Defclass{standard-disk}
 
+This class is an instantiable subclass of the class \texttt{disk}. 
+
+\Defgeneric {size} {disk}
+
+Return the number of blocks that \textit{disk} may store.
+
+\Defgeneric {block-size} {disk}
+
+Return the size of a native block for \textit{disk}.  This size is the
+preferred size to use in transfers to and from this type of disk.
+
 \Defgeneric {write-block} {disk block address \key (hang t)}
 
 Write a block of data to the disk.  The parameter \textit{disk} is an
