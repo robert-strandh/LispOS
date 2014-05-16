@@ -14,6 +14,33 @@ corresponding operating-specific API for each group.%
   discussion.  More so here, because I have no prior experience in
   defining device-driver APIs. -- RS}
 
+\section{Tickets}
+
+Some I/O operations, when called, return an object of type
+\emph{ticket}.  A ticket is either \emph{pending} or it has
+\emph{expired}.  A pending ticket corresponds to an I/O operation that
+is not yet complete.  
+
+\Defprotoclass{ticket}
+
+The base class for all tickets.
+
+\Defclass{standard-ticket}
+
+Instantiable subclass of the class \texttt{ticket}
+
+\Defgeneric {expired-p} {ticket}
+
+Return true if and only if \textit{ticket} has expired.
+
+\Defun {wait-some} {\rest tickets}
+
+Suspend the current process until one of the tickets has expired. 
+
+\Defun {wait-all} {\rest tickets}
+
+Suspend the current process until all of the tickets have expired.
+
 \section{Disk drivers}
 
 \Defprotoclass{disk}
@@ -39,9 +66,10 @@ Return the number of blocks that \textit{disk} may store.
 Return the size of a native block for \textit{disk}.  This size is the
 preferred size to use in transfers to and from this type of disk.
 
-\Defgeneric {write-block} {disk block address \key (hang t)}
+\Defgeneric {write-block} {disk block address}
 
-Write a block of data to the disk.  The parameter \textit{disk} is an
+Issue a \emph{write} operation transferring the data in \textit{block}
+to \textit{disk}.  The parameter \textit{disk} is an
 instance of the class \textit{disk}, and \textit{block} is a a vector
 of type \texttt{(simple-array (unsigned-byte 8) (*))}.  The size of
 \textit{block} must be a power of 2, and the address must be aligned
@@ -55,13 +83,11 @@ be written to the device.  If the size of \textit{block} is
 \emph{greater} than the native block size of \textit{disk}, then
 several native blocks will be written from \textit{block}.
 
-If \textit{hang} is \emph{true} (the default), then the current
-process will be suspended until the transfer is complete.
-If \textit{hang} is \emph{false} the call will return a \emph{time
-  stamp}, which is a fixnum that can later be used in an invocation of
-the \texttt{wait} function.
+A call to this generic function returns an instance of the class
+\texttt{ticket}.  The functions \texttt{wait-some} and
+\texttt{wait-all} can be used to wait for the I/O operation to finish.
 
-\Defgeneric {read-block} {disk block address \key (hang t)}
+\Defgeneric {read-block} {disk block address}
 
 Write a block of data to the disk.  The parameter \textit{disk} is an
 instance of the class \textit{disk}, and \textit{block} is a a vector
@@ -75,19 +101,8 @@ block will be copied to \textit{block}.  If the size of \textit{block}
 is \emph{greater} than the native block size of \textit{disk}, then
 several native blocks will be read into \textit{block}.
 
-If \textit{hang} is \emph{true} (the default), then the current
-process will be suspended until the transfer is complete.
-If \textit{hang} is \emph{false} the call will return a \emph{time
-  stamp}, which is a fixnum that can later be used in an invocation of
-the \texttt{wait} function.
+A call to this generic function returns an instance of the class
+\texttt{ticket}.  The functions \texttt{wait-some} and
+\texttt{wait-all} can be used to wait for the I/O operation to finish.
 
-\Defgeneric {wait} {disk time-stamp \key (hang t)}
-
-Wait for a transfer to complete.  If the transfer is already complete,
-then this function returns immediately.  If not, then the current
-process is suspended until the transfer is complete. 
-
-If \textit{hang} is \emph{true} (the default), then the current
-process will be suspended until the transfer is complete.
-If \textit{hang} is \emph{false}, then \texttt{wait} will return
-\emph{true} if the transfer is complete, and \emph{false} otherwise. 
+%%  LocalWords:  instantiable
