@@ -5,3 +5,21 @@ operating system will need a global \emph{garbage collector}.  There
 is a rich litterature (see e.g., \cite{Jones:2011:GCH:2025255}) on the
 subject. 
 
+Each thread has a local heap, roughly the size of the cache, say
+around 4MiB.  The thread-local heap is managed entirely by the thread
+itself, so that the garbage collector for it is executed by the thread
+itself.  Experiments show that we will be able to run the thread-local
+garbage collector in a few milliseconds, which is good enough for most
+applications.  We will use a sliding garbage collector in order to
+maintain allocation order.  This way, we have a precise measure of the
+relative age of the objects, so that we can promote only the oldest
+objects when required. 
+
+In addition to the thread-local heaps, there is a global heap.  The
+garbage collector for this heap will use the method invented by
+Kermany et al \cite{Kermany:2006:CCI:1133981.1134023}.  It is also a
+sliding garbage collector, except that it has some very good features,
+including, parallel and concurrent execution.  These features allow us
+to run the global garbage collector in multiple separate threads. 
+
+
