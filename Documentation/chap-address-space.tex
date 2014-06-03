@@ -16,13 +16,40 @@ storage must have associated physical disk memory.
 The other half of the address space (say the lower half) contains
 mainly the global heap, aside from a small amount of space dedicated
 to interrupt handlers and other architecture-imposed data structures.
-This part of the address space is divided in (roughly two) halves.
-Only half of it requires associated physical disk memory.  Aside from
-the architecture-imposed data structures. The two halves basically map
-to the same disk space.  The reason for this organization is that it
-makes it easy to implement the global garbage collector
+The address space for the heap is divided in two halves.  Only one
+half requires associated physical disk memory.  Thus, aside from the
+architecture-imposed data structures, the two halves map to the same
+disk space.  The reason for this organization is that it makes it easy
+to implement the global garbage collector
 \seechap{chap-garbage-collection}.  The method invented by Kermany et
 al \cite{Kermany:2006:CCI:1133981.1134023} divides the heap address
 space in two halves, but requires physical memory only for a little
-more than half of it. 
+more than half of it.
 
+\refFig{fig-address-space} illustrates how the organization of the
+address space might look on a computed equipped with the x86-64
+processor.  This processor has a theoretical virtual address space of
+$2^{64}$ bytes, but the real virtual address space might be limited
+to $2^{46}$ bytes.  If so, then the middle of the theoretical address
+space is not part of the real address space. 
+
+\begin{figure}
+\begin{center}
+\inputfig{fig-address-space.pdf_t}
+\end{center}
+\caption{\label{fig-address-space}
+Address space on x86-64.}
+\end{figure}
+
+As \refFig{fig-address-space} illustrates, the available disk space is
+typically a small fraction of the possible virtual address space.  For
+example, $2^{46}$ bytes is $64$ terabytes which is two orders of
+magnitude larger than a typical hard disk.  In that case, the disk
+space is divided (not necessarily in equal parts) between the global
+heap and thread-local storage.  Furthermore, the size of each
+thread-local storage can be configured according to whether a large
+number of threads should be possible, or, on the contrary, each thread
+should have a large stack.  
+
+Main memory is not shown in \refFig{fig-address-space}, simply because
+it just works as a demand-paged cache for the available disk space. 
