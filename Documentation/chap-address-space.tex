@@ -1,0 +1,28 @@
+\chapter{Address space}
+
+The system will have a single address space, as opposed to a separate
+address space for each process.  We are targeting 64-bit
+architectures, which allows us to consider all disk memory as being
+part of the address space.  Basically, main memory is a cache for the
+disk(s), and the virtual address of an object refers to its location
+on disk (with some exceptions as discussed below).
+
+Half the address space (say the upper half) contains thread-local
+storage.  Each thread has a local heap and a stack.  For example, the
+thread-local address space can be 16 or 32MiB of which the local heap
+can be around 4MiB (smaller than the size of the cache).  Thread-local
+storage must have associated physical disk memory. 
+
+The other half of the address space (say the lower half) contains
+mainly the global heap, aside from a small amount of space dedicated
+to interrupt handlers and other architecture-imposed data structures.
+This part of the address space is divided in (roughly two) halves.
+Only half of it requires associated physical disk memory.  Aside from
+the architecture-imposed data structures. The two halves basically map
+to the same disk space.  The reason for this organization is that it
+makes it easy to implement the global garbage collector
+\seechap{chap-garbage-collection}.  The method invented by Kermany et
+al \cite{Kermany:2006:CCI:1133981.1134023} divides the heap address
+space in two halves, but requires physical memory only for a little
+more than half of it. 
+
