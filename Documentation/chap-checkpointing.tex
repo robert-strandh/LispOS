@@ -39,6 +39,15 @@ a page is \emph{write protected}, but a frame associated with version
 $2$ of a page is not.  Any attempt to modify the contents of a
 write-protected frame results in a \emph{write fault}.
 
+A frame can be \emph{clean} or \emph{dirty}.  By definition, when the
+frame is clean, its contents are identical to those of the associated
+page/version.  When the frame is dirty, it means that it has been
+modified after it was associated with the underlying page/version.  A
+frame that is associated with version $0$ of a page can not be dirty.
+If a frame that is associated with version $1$ of a page is dirty,
+then it is because it was modified during the \emph{previous}
+checkpointing cycle, and not the current one.
+
 When a page fault occurs, and there are unused frames, an arbitrary
 unused frame is associated with the latest version of the page.  If
 there are no unused frames when a page fault occurs (which is the
