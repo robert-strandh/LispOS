@@ -39,4 +39,13 @@ a page is \emph{write protected}, but a frame associated with version
 $2$ of a page is not.  Any attempt to modify the contents of a
 write-protected frame results in a \emph{write fault}.
 
+When a page fault occurs, and there are unused frames, an arbitrary
+unused frame is associated with the latest version of the page.  If
+there are no unused frames when a page fault occurs (which is the
+normal situation), a frame that is already associated with a page must
+be freed up.  To select the frame to use, an ordinary ALRU method can
+be used.  If the selected frame is dirty, the contents is written to
+the page/version associated with the frame.  Finally, the latest
+version of the requested page is associated with the selected frame.
+
 %%  LocalWords:  checkpointing
