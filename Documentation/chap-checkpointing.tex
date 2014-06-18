@@ -34,8 +34,9 @@ A page can be associated with a \emph{frame}%
 attempt to access a page that is not associated with a frame results
 in a \emph{page fault}.  At most one version of a particular page can
 be associated with a frame, and then it is the version with the
-highest number.  The frame associated with a page may or may not be
-\emph{write protected}.  If it is write protected, any attempt to
-modify the contents of the frame results in a \emph{write fault}.
+highest number.  A frame associated with version $0$ or version $1$ of
+a page is \emph{write protected}, but a frame associated with version
+$2$ of a page is not.  Any attempt to modify the contents of a
+write-protected frame results in a \emph{write fault}.
 
 %%  LocalWords:  checkpointing
