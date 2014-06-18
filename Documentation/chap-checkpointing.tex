@@ -11,6 +11,12 @@ divided into three parts, and the page number should be multiplied by
   will cost a factor 3 as much compared to the price when no
   checkpointing is used.}
 
+Checkpointing is divided into \emph{cycles} delimited by
+\emph{snapshots}.  At any point in time, two checkpointing cycles are
+important.  The \emph{current} checkpointing cycle started at the
+last snapshot and is still going on.  The \emph{previous}
+checkpointing cycle is the one that ended at the last snapshot. 
+
 A page can exist in one, two, or three \emph{versions}, located in
 three different places on disk.  Version $0$ of the page is the oldest
 version, and also the version that would be used when the system is
