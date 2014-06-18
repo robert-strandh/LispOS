@@ -78,4 +78,16 @@ unprotected before execution resumes.  If the frame is dirty, then its
 contents are first written to the associated page instance.  Then the
 association is changed as before. 
 
+To determine the disk location of each version of each page, we use a
+\emph{version table}.  The version table is just a sequence of bytes,
+one for each page.  Only 6 bits in each byte are actually used.  The
+two least significant bits indicate the location of version $0$ of the
+page.  $00$ means the first of the $3$ possible consecutive disk
+locations, $01$ means the second and $10$ means the third, and $11$ is
+not used.  The next two bits indicate the location of version $1$ of
+the page, with the same meaning as before, except that $11$ means that
+there is no version $1$ of the page.  The final two bits indicate the
+location of version $2$ of the page with the same interpretation as
+for version $1$. 
+
 %%  LocalWords:  checkpointing
