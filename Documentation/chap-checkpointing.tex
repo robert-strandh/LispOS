@@ -58,5 +58,17 @@ be freed up.  To select the frame to free up, an ordinary ALRU method
 can be used.  If the selected frame is dirty, the contents are written
 to the page instance associated with the frame.  Finally, the latest
 version of the requested page is associated with the selected frame.
+If the latest version of the requested page is either version $0$ or
+version $1$, then the frame is write protected before execution
+resumes. 
+
+As indicated above, when a write fault occurs, the frame written to
+must be associated with either version $0$ or version $1$ of a page.
+If it is associated with version $0$ of the page, then the frame must
+be clean.  In that case, the association of the frame is modified, so
+that it henceforth is associated with version $2$ of the page.  Before
+execution resumes, the frame is unprotected.  As soon as execution
+resumes, the frame will be marked as dirty since the reason for the
+fault was an attempt to write to it. 
 
 %%  LocalWords:  checkpointing
