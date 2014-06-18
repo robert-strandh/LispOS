@@ -69,6 +69,13 @@ be clean.  In that case, the association of the frame is modified, so
 that it henceforth is associated with version $2$ of the page.  Before
 execution resumes, the frame is unprotected.  As soon as execution
 resumes, the frame will be marked as dirty since the reason for the
-fault was an attempt to write to it. 
+fault was an attempt to write to it.  When a write fault occurs and
+the frame is associated with version $1$ of the associated page, the
+frame may be either clean or dirty.  If it is clean, again, the
+association of the frame is modified so that it henceforth is
+associated with version $2$ of the page, and again the frame is
+unprotected before execution resumes.  If the frame is dirty, then its
+contents are first written to the associated page instance.  Then the
+association is changed as before. 
 
 %%  LocalWords:  checkpointing
