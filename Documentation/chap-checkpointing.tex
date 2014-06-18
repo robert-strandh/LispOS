@@ -43,8 +43,8 @@ write-protected frame results in a \emph{write fault}.
 
 A frame can be \emph{clean} or \emph{dirty}.  By definition, when the
 frame is clean, its contents are identical to those of the associated
-page/version.  When the frame is dirty, it means that it has been
-modified after it was associated with the underlying page/version.  A
+page instance.  When the frame is dirty, it means that it has been
+modified after it was associated with the underlying page instance.  A
 frame that is associated with version $0$ of a page can not be dirty.
 If a frame that is associated with version $1$ of a page is dirty,
 then it is because it was modified during the \emph{previous}
@@ -56,7 +56,7 @@ there are no unused frames when a page fault occurs (which is the
 normal situation), a frame that is already associated with a page must
 be freed up.  To select the frame to use, an ordinary ALRU method can
 be used.  If the selected frame is dirty, the contents is written to
-the page/version associated with the frame.  Finally, the latest
+the page instance associated with the frame.  Finally, the latest
 version of the requested page is associated with the selected frame.
 
 %%  LocalWords:  checkpointing
