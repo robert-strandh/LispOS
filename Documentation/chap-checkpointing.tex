@@ -29,4 +29,13 @@ previous checkpoint cycle.  Version $2$ of the page is the
 and only if the page has been modified since the beginning of the
 \emph{current} checkpoint cycle.
 
+A page can be associated with a \emph{frame}%
+\footnote{A \emph{frame} is the main-memory instance of a page.}  An
+attempt to access a page that is not associated with a frame results
+in a \emph{page fault}.  At most one version of a particular page can
+be associated with a frame, and then it is the version with the
+highest number.  The frame associated with a page may or may not be
+\emph{write protected}.  If it is write protected, any attempt to
+modify the contents of the frame results in a \emph{write fault}.
+
 %%  LocalWords:  checkpointing
