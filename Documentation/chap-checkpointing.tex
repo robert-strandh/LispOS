@@ -11,6 +11,16 @@ divided into three parts, and the page number should be multiplied by
   will cost a factor 3 as much compared to the price when no
   checkpointing is used.}
 
-
+A page can exist in one, two, or three \emph{versions}, located in
+three different places on disk.  Version $0$ of the page is the oldest
+version, and also the version that would be used when the system is
+rebooted after a crash.  Version $0$ of the page always exists.
+Version $1$ of the page corresponds to the contents of the page as it
+was at the end of the \emph{previous} checkpoint cycle.  Version $1$
+of the page exists if and only if the page was modified during the
+previous checkpoint cycle.  Version $2$ of the page is the
+\emph{current} version of the page.  Version $2$ of the page exists if
+and only if the page has been modified since the beginning of the
+\emph{current} checkpoint cycle.
 
 %%  LocalWords:  checkpointing
