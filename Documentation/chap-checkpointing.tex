@@ -6,7 +6,8 @@ the \emph{page number} and the \emph{offset within the page}.  The
 page number directly corresponds to the location on disk of the page.
 However, when checkpointing is activated, the available disk memory is
 divided into three parts, and the page number should be multiplied by
-3 to get the first of three pages where the object might be located.%
+3 to get the first of three disk locations where the object might be
+located.%
 \footnote{The price to pay for checkpointing is thus that disk memory
   will cost a factor 3 as much compared to the price when no
   checkpointing is used.}
