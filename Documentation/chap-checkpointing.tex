@@ -133,5 +133,11 @@ $1$ pages, the set of page instances corresponding to all version $1$
 pages and version $0$ pages where no version $1$ exists represents the
 state of the system at the time of the last snapshot.  
 
+To save the coherent state of the system to disk, the in-memory
+version table directory is scanned.  Whenever a directory entry with
+the bit indicating the existence of pages with several versions set,
+the page of the directory entry is saved to disk.  When the entire
+version table has been scanned, a new boot sector is written
+indicating that the newly saved table is the current one.
 
 %%  LocalWords:  checkpointing mutator
