@@ -159,4 +159,22 @@ existing version table entry gives the new version.  Even though it
 would require a memory access, this table will quickly be in the
 cache, so access will be fast.  
 
+To get an idea of performance of the atomic flip, let us take a
+situation where the \emph{working set} is no bigger than the size of
+main memory.%
+\footnote{If the working set is larger than the main memory,
+  performance is likely to deteriorate for more fundamental reasons.}
+Furthermore, let us say that the size of main memory is $64GiB$ and
+that around half the pages of the working set are modified in a
+particular checkpointing cycle.  If we assume that the modified pages
+are concentrated with respect to the version table directory, then we
+can ignore the time to scan the version table directory.  To
+accomplish the flip, we then need to modify $2^{23}$ entries.  If we
+assume modified entries are adjacent, we can load and store $8$ of
+them at a time, requiring $2^{21}$ memory accesses.  If a memory
+access takes around $10$ns, the flip will take around $20$ms. 
+
+The time for a flip can be made shorter by taking more frequent
+snapshots. 
+
 %%  LocalWords:  checkpointing mutator
