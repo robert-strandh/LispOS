@@ -140,4 +140,17 @@ the page of the directory entry is saved to disk.  When the entire
 version table has been scanned, a new boot sector is written
 indicating that the newly saved table is the current one.
 
+The final action to take in order to finish the current checkpointing
+cycle and begin a new one is an \emph{atomic flip}.  This atomic flip
+consists of turning all version $1$ pages into version $0$ pages and
+all version $2$ pages into version $1$ pages.  To do that, mutator
+threads must be stopped.  Then the in-memory version table is scanned.
+Whenever an entry is found that has a version other than $0$ in it, it
+is modified.  If both a version $1$ and a version $2$ exists, bits $2$
+and $3$ of the entry are moved to position $0$ and $1$, bits $4$ and
+$5$ are moved to positions $2$ and $3$, and positions $4$, and $5$ are
+set to $11$.  If no version $1$ exists, then bits $4$ and $5$ are
+moved to positions $2$ and $3$, and positions $4$, and $5$ are set to
+$11$.  
+
 %%  LocalWords:  checkpointing mutator
