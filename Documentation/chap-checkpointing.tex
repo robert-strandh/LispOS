@@ -90,4 +90,14 @@ there is no version $1$ of the page.  The final two bits indicate the
 location of version $2$ of the page with the same interpretation as
 for version $1$. 
 
+At any point in time, there exist three version tables; two on disk
+and one in main memory.  The two versions on disk play the same role
+as the disk tables in EROS, i.e., while one of them is being updated,
+the other is till complete and accurate.  A single bit in the boot
+sector of the disk selects which one should be used at boot time.
+When a new version table needs to be written to disk, it is first
+written to the place of the unused disk table, and then the boot
+sector is written with a flipped selection bit. 
+
+
 %%  LocalWords:  checkpointing
