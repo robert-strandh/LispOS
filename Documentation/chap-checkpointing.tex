@@ -113,5 +113,15 @@ in more than one version.  It is expected that a relatively small
 fraction of the directory entries in each checkpointing cycle with
 have the bit set.
 
+When a write fault occurs and as a result a new version of a page is
+created, the in-memory version table is consulted.  The entry for the
+page indicates the disk location of version $0$ of the page, and
+sometimes also version $1$ of the page.  The disk location for the new
+version (version $2$) of the page is chosen to be one of the two
+unused ones (if only version $0$ of the page exists) or the only
+unused one (if both version $0$ and version $1$ of the page exists).
+The location for version $2$ of the page is indicated in the version
+table entry by setting bits $4$ and $5$ of the entry to the
+corresponding disk location. 
 
 %%  LocalWords:  checkpointing
