@@ -124,4 +124,14 @@ The location for version $2$ of the page is indicated in the version
 table entry by setting bits $4$ and $5$ of the entry to the
 corresponding disk location. 
 
-%%  LocalWords:  checkpointing
+In parallel with mutator threads, one or more threads scan the page
+table of the operating system for dirty frames.  When a dirty frame
+corresponding to version $1$ of a page is found, the contents of the
+frame is saved to its associated page instance, and the dirty-bit is
+cleared.  When there are no more dirty frames corresponding to version
+$1$ pages, the set of page instances corresponding to all version $1$
+pages and version $0$ pages where no version $1$ exists represents the
+state of the system at the time of the last snapshot.  
+
+
+%%  LocalWords:  checkpointing mutator
