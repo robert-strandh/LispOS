@@ -99,5 +99,16 @@ When a new version table needs to be written to disk, it is first
 written to the place of the unused disk table, and then the boot
 sector is written with a flipped selection bit. 
 
+The version table in main memory is represented in two levels with a
+\emph{directory} of pages.  If one page is 4kiB, then one page can
+hold $2^{12}$ version table entries.  For a $300GB$ disk (with room
+for around $25$ million pages), the directory will contain around
+$6000$ entries.  A directory entry contains not only a pointer to the
+page of table entries, but also a bit indicating whether any of the
+table entries in the corresponding page indicates a page which exists
+in more than one version.  It is expected that a relatively small
+fraction of the directory entries in each checkpointing cycle with
+have the bit set.
+
 
 %%  LocalWords:  checkpointing
