@@ -151,6 +151,12 @@ and $3$ of the entry are moved to position $0$ and $1$, bits $4$ and
 $5$ are moved to positions $2$ and $3$, and positions $4$, and $5$ are
 set to $11$.  If no version $1$ exists, then bits $4$ and $5$ are
 moved to positions $2$ and $3$, and positions $4$, and $5$ are set to
-$11$.  
+$11$.  Finally, mutator threads are restarted.
+
+The easiest way to modify a version table entry is probably to create
+a 64-byte table in memory which, for each possible version of the
+existing version table entry gives the new version.  Even though it
+would require a memory access, this table will quickly be in the
+cache, so access will be fast.  
 
 %%  LocalWords:  checkpointing mutator
