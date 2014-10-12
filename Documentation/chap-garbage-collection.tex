@@ -3,7 +3,7 @@
 
 Contrary to traditional operating systems such as \unix{}, a Lisp
 operating system will need a global \emph{garbage collector}.  There 
-is a rich litterature (see e.g., \cite{Jones:2011:GCH:2025255}) on the
+is a rich literature (see e.g., \cite{Jones:2011:GCH:2025255}) on the
 subject. 
 
 Each thread has a local heap, roughly the size of the cache, say
@@ -22,5 +22,3 @@ Kermany et al \cite{Kermany:2006:CCI:1133981.1134023}.  It is also a
 sliding garbage collector, except that it has some very good features,
 including, parallel and concurrent execution.  These features allow us
 to run the global garbage collector in multiple separate threads. 
-
-
