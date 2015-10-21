@@ -1,0 +1,207 @@
+\documentclass{slides}
+\usepackage[utf8]{inputenc}
+\usepackage{graphics}
+\usepackage{portland}
+\usepackage{epsfig}
+\usepackage{alltt}
+\usepackage{moreverb}
+\usepackage{url}
+\usepackage[dvips,usenames]{color}
+
+\definecolor{MyLightMagenta}{rgb}{1,0.7,1}
+\definecolor{darkgreen}{rgb}{0.1,0.7,0.1}
+
+\newcommand{\darkgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\thistle}[1]{\textcolor{Thistle}{#1}}
+\newcommand{\apricot}[1]{\textcolor{Apricot}{#1}}
+\newcommand{\melon}[1]{\textcolor{Melon}{#1}}
+\newcommand{\dandelion}[1]{\textcolor{Dandelion}{#1}}
+\newcommand{\green}[1]{\textcolor{OliveGreen}{#1}}
+\newcommand{\lavender}[1]{\textcolor{Lavender}{#1}}
+\newcommand{\mylightmagenta}[1]{\textcolor{MyLightMagenta}{#1}}
+\newcommand{\blue}[1]{\textcolor{RoyalBlue}{#1}}
+\newcommand{\darkorchid}[1]{\textcolor{DarkOrchid}{#1}}
+\newcommand{\orchid}[1]{\textcolor{Orchid}{#1}}
+\newcommand{\brickred}[1]{\textcolor{BrickRed}{#1}}
+\newcommand{\peach}[1]{\textcolor{Peach}{#1}}
+\newcommand{\bittersweet}[1]{\textcolor{Bittersweet}{#1}}
+\newcommand{\salmon}[1]{\textcolor{Salmon}{#1}}
+\newcommand{\yelloworange}[1]{\textcolor{YellowOrange}{#1}}
+\newcommand{\periwinkle}[1]{\textcolor{Periwinkle}{#1}}
+
+\newcommand{\names}[1]{\periwinkle{#1}}
+\newcommand{\motcle}[1]{\mylightmagenta{#1}}
+\newcommand{\classname}[1]{\darkgreen{#1}}
+\newcommand{\str}[1]{\yelloworange{#1}}
+\newcommand{\defun}[1]{\orchid{#1}}
+\newcommand{\ti}[1]{\begin{center}\Large{\textcolor{blue}{#1}}\end{center}}
+\newcommand{\alert}[1]{\thistle{#1}}
+\newcommand{\lispprint}[1]{\dandelion{#1}}
+\newcommand{\lispvalue}[1]{\red{#1}}
+\newcommand{\tr}[1]{\texttt{\red{#1}}}
+\newcommand{\emc}[1]{\red{#1}}
+\newcommand{\lispobj}[1]{\green{\texttt{#1}}}
+\def\prompt{{\textcolor{Orchid}{CL-USER>}}}
+\newcommand{\promptp}[1]{\textcolor{Orchid}{#1>}}
+
+\newcommand{\Comment}[1]{
+\begin{center}
+\textcolor{yellow}
+{#1}
+\end{center}
+}
+
+\def\bs{$\backslash$}
+\def\inputfig#1{\input #1}
+\def\inputtex#1{\input #1}
+
+\begin{document}
+\landscape
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\setlength{\marginparwidth}{1cm}
+\setlength{\parskip}{0.5cm}
+\setlength{\parindent}{0cm}
+%-----------------------------------------------------------
+\begin{slide}\ti{The ideal operating system}
+\vskip 0.5cm
+\begin{center}
+Robert Strandh \\
+LaBRI \\
+Université de Bordeaux \\
+Bordeaux, France
+\end{center}
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Problems with existing systems}
+\vskip 0.5cm
+\begin{itemize}
+\item The\emph{process} concept
+\item Different semantics of primary and secondary memory
+\item Hierarchical file systems. 
+\item The existence of a \emph{kernel}
+\item Monolithic applications
+\end{itemize}
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{The process concept}
+\vskip 0.5cm
+Recall what a process is:
+
+Each application gets the illusion of having the full physical address
+space of the physical processor.  
+
+Problems:
+\begin{itemize}
+\item An address (pointer) can not be transmitted from one process to
+  another process.
+\item Complex data structures must be serialized and de-serialized in
+  order to be communicated.
+\end{itemize}
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Hierarchical file systems}
+\vskip 0.5cm
+Problematic in two ways:
+
+\begin{itemize}
+\item Hierarchical
+\item File
+\end{itemize}
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Problem with hierarchies}
+\vskip 0.5cm
+Information is really not hierarchical. 
+
+\texttt{.../Articles/Lisp/2015/...}\\
+\texttt{.../Articles/2015/Lisp/...}\\
+\texttt{.../Lisp/Articles/2015/...}\\
+\texttt{.../Lisp/2015/Articles/...}\\
+\texttt{.../2015/Lisp/Articles/...}\\
+\texttt{.../2015/Articles/Lisp/...}\\
+
+Are typically all the same.  How to organize?
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Problem with files}
+\vskip 0.5cm
+In most modern systems a \emph{file} is a sequence of 8-bit bytes.
+
+But we would like to store other things too:
+
+\begin{itemize}
+\item People
+\item Organizations
+\item etc.
+\end{itemize}
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{The process concept}
+
+When Unix was invented, the machine on which it ran had no
+memory-management unit (MMU).  The solution was to create every
+program so that it was located at address 0, and to \emph{swap}.
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Hierarchies}
+
+Maybe Multics 1965.
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Files as sequences of bytes}
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{}
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{}
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Technology that helps}
+
+  \begin{itemize}
+  \item Large address space.
+  \item New permanent memory (3D Xpoint).
+  \item Multi-core processors making concurrent garbage collection
+    possible. 
+  \item New concurrent garbage-collection algorithms.
+  \end{itemize}
+
+\vfill\end{slide}
+%--------------------------------
+\begin{slide}\ti{Current status}
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Conclusions}
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Future work}
+
+\vfill\end{slide}
+%% %-----------------------------------------------------------
+%% \begin{slide}\ti{}
+
+%% \vfill\end{slide}
+%% %-----------------------------------------------------------
+%% \begin{slide}\ti{}
+
+%% \vfill\end{slide}
+%% %-----------------------------------------------------------
+%% \begin{slide}\ti{}
+
+%% \vfill\end{slide}
+%--------------------------------
+
+\end{document}
+ 
