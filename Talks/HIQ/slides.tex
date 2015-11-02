@@ -355,6 +355,9 @@ objects:
 Objects are referenced through \emph{capabilities}, i.e. pointers
 augmented with access rights.
 
+Accessing an object in the object store creates such a capability,
+based on the access-control list in the store, and the user.
+
 \vfill\end{slide}
 %-----------------------------------------------------------
 \begin{slide}\ti{Kernel}
