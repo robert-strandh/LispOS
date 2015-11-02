@@ -309,6 +309,20 @@ But they will be objects just like any other object in the store.
 
 \vfill\end{slide}
 %-----------------------------------------------------------
+\begin{slide}\ti{Object store}
+
+Most of the object store will fit in main memory.
+
+In a typical system, most data is in the form of pictures, movies,
+PDF-type documents, etc.
+
+These documents do not contain pointers, so do not have to be scanned
+by the garbage collector.
+
+These documents will automatically migrate to secondary storage.
+
+\vfill\end{slide}
+%-----------------------------------------------------------
 \begin{slide}\ti{File}
 
 Objects are just \emph{capabilities}, i.e. pointers augmented with
