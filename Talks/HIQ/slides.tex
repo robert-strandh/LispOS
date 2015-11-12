@@ -248,6 +248,16 @@ What is the origin of those problems?
 
 \vfill\end{slide}
 %-----------------------------------------------------------
+\begin{slide}\ti{The process concept}
+
+When Unix was invented, the machine on which it ran had no
+memory-management unit (MMU).
+
+The solution was to create every program so that it was located at
+address 0, and to \emph{swap}.
+
+\vfill\end{slide}
+%-----------------------------------------------------------
 \begin{slide}\ti{Different memory semantics}
 
 Early computers had primary memory made of magnetic cores and
@@ -258,16 +268,6 @@ secondary memory in the form of sequential tape.
 Initially, files were created to behave like tape.
 
 Multics (1964) unified primary and secondary memory.
-
-\vfill\end{slide}
-%-----------------------------------------------------------
-\begin{slide}\ti{The process concept}
-
-When Unix was invented, the machine on which it ran had no
-memory-management unit (MMU).
-
-The solution was to create every program so that it was located at
-address 0, and to \emph{swap}.
 
 \vfill\end{slide}
 %-----------------------------------------------------------
