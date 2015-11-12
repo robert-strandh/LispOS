@@ -165,6 +165,21 @@ Problems:
 \end{itemize}
 \vfill\end{slide}
 %-----------------------------------------------------------
+\begin{slide}\ti{Different memory semantics}
+
+Only two versions available:
+
+\begin{itemize}
+\item The most recent one in primary volatile memory.
+\item The one from last time it was saved on secondary non-volatile
+  memory.
+\end{itemize}
+
+In case of a crash (say power failure) only the last version is
+available.
+
+\vfill\end{slide}
+%-----------------------------------------------------------
 \begin{slide}\ti{Hierarchical file systems}
 \vskip 0.5cm
 Problematic in two ways:
