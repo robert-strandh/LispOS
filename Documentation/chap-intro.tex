@@ -36,6 +36,20 @@ generating pictures (called \texttt{pic}), a program for generating
 equations (called \texttt{eqn}), and of course the typesetting program
 itself (called \texttt{troff}).
 
+The computers that \unix{} was intended to run on did not have any
+memory-management unit (MMU).  The absence of memory management meant
+that the code could not move around in physical memory depending on
+whether other programs were present in memory as well.  To solve this
+problem, a mechanism called \emph{swapping} was used.  Each program
+was written so that it had the entire physical address space at its
+disposal, and to make that work, one process at a time was present in
+physical memory.  To give the illusion of multi-programming, at
+regular intervals the current process was interrupted, moved from main
+memory to secondary memory, and another runnable process was loaded
+into main memory instead.  Programs written in low-level languages
+such as \clanguage{} and \cplusplus{} are still written as if they
+were meant to be executed on such early computers.
+
 Using \unix{}-style pipes to communicate between different components of
 an application has several disadvantages:
 
