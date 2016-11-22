@@ -149,7 +149,7 @@ As a researcher:
 \end{itemize}
 \vfill\end{slide}
 %-----------------------------------------------------------
-\begin{slide}\ti{The process concept}
+\begin{slide}\ti{Problems with the process concept}
 \vskip 0.5cm
 Recall what a process is:
 
@@ -165,7 +165,22 @@ Problems:
 \end{itemize}
 \vfill\end{slide}
 %-----------------------------------------------------------
-\begin{slide}\ti{Hierarchical file systems}
+\begin{slide}\ti{Problem with different memory semantics}
+
+Only two versions available:
+
+\begin{itemize}
+\item The most recent one in primary volatile memory.
+\item The one from last time it was saved on secondary non-volatile
+  memory.
+\end{itemize}
+
+In case of a crash (say power failure) only the last version is
+available.
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Problems with hierarchical file systems}
 \vskip 0.5cm
 Problematic in two ways:
 
@@ -217,7 +232,7 @@ But we would like to store other things too:
 
 \vfill\end{slide}
 %-----------------------------------------------------------
-\begin{slide}\ti{Problem with monolithic applications}
+\begin{slide}\ti{Problems with monolithic applications}
 
   \begin{itemize}
   \item If an application is updated, it must be restarted.
@@ -233,6 +248,16 @@ What is the origin of those problems?
 
 \vfill\end{slide}
 %-----------------------------------------------------------
+\begin{slide}\ti{The process concept}
+
+When Unix was invented, the machine on which it ran had no
+memory-management unit (MMU).
+
+The solution was to create every program so that it was located at
+address 0, and to \emph{swap}.
+
+\vfill\end{slide}
+%-----------------------------------------------------------
 \begin{slide}\ti{Different memory semantics}
 
 Early computers had primary memory made of magnetic cores and
@@ -243,16 +268,6 @@ secondary memory in the form of sequential tape.
 Initially, files were created to behave like tape.
 
 Multics (1964) unified primary and secondary memory.
-
-\vfill\end{slide}
-%-----------------------------------------------------------
-\begin{slide}\ti{The process concept}
-
-When Unix was invented, the machine on which it ran had no
-memory-management unit (MMU).
-
-The solution was to create every program so that it was located at
-address 0, and to \emph{swap}.
 
 \vfill\end{slide}
 %-----------------------------------------------------------
@@ -294,19 +309,24 @@ Let's examine what the solution might be.
 
 \vfill\end{slide}
 %-----------------------------------------------------------
-\begin{slide}\ti{Process concept}
+\begin{slide}\ti{The process concept}
 
-A single address space.
+A single address space operating system (SASOS).
 
-Applications must not have access.
+Applications must not have full access to the code and data in the
+address space.
 
 Possible now because of 64-bit addresses.
 
 \vfill\end{slide}
 %-----------------------------------------------------------
-\begin{slide}\ti{Primary and secondary memory}
+\begin{slide}\ti{Different memory semantics}
 
 Orthogonal persistence.
+
+Techniques are known (Multics, EROS, etc)
+
+Requires better \emph{undo} facility.
 
 \vfill\end{slide}
 %-----------------------------------------------------------
@@ -415,24 +435,25 @@ based on the access-control list in the store, and the user.
 
 Functions are called indirectly, so can be replaced arbitrarily.
 
+This technique is known from so called \emph{dynamic programming
+  languages}.
+
+Such a language does not distinguish between compile-time and
+run-time.  Instead, semantics is explained as a sequence of
+interactions.
+
+An interaction might be to replace an existing version of a function
+with a new version.
+
 \vfill\end{slide}
 %-----------------------------------------------------------
 \begin{slide}\ti{Monolithic applications}
 
-  \begin{itemize}
-  \item An application is just a collection of functions to be
-    called.
-  \item As with the kernel, functions are called indirectly, so can be
-    replaced dynamically.
-  \end{itemize}
+An application is just a collection of functions to be
+called.
 
-\vfill\end{slide}
-%-----------------------------------------------------------
-\begin{slide}\ti{}
-
-\vfill\end{slide}
-%-----------------------------------------------------------
-\begin{slide}\ti{}
+As with the kernel, functions are called indirectly, so can be
+replaced dynamically.
 
 \vfill\end{slide}
 %-----------------------------------------------------------
@@ -472,6 +493,25 @@ Work in progress:
 \vfill\end{slide}
 %-----------------------------------------------------------
 \begin{slide}\ti{Questions?}
+
+Thank you for listening.
+
+Do you have any questions?
+
+\vfill\end{slide}
+%-----------------------------------------------------------
+\begin{slide}\ti{Possible future talks}
+
+  \begin{itemize}
+  \item Paper by Hudak and Jones
+  \item Algorithms and data structures
+  \item Object-oriented programming with generic functions
+  \item Parsing technology
+  \item Compiler technology (optimization)
+  \item Operating-system techniques
+  \item Automatic memory-management (garbage collection) techniques
+  \item Non-automatic memory-management techniques
+  \end{itemize}
 
 \vfill\end{slide}
 %% %-----------------------------------------------------------
