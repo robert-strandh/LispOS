@@ -167,6 +167,20 @@ prevent a program from accessing the contents of any address.
 Essentially, we still write programs today as if we were using
 computers with no memory-management unit.
 
+Full address-space access is a notorious source of security problems.
+If a program does not take great care to prevent a temporary buffer
+from overflowing, reading an external document such as web page may
+overwrite part of the stack (which is located in the address space of
+the process).  Such buffer overflow can alter the return address of
+the currently executing function, so that instead of returning
+normally, it returns to some code that can have an effect that the
+program was absolutely not meant to have.  It can do that because the
+\clanguage{} library is linked into the same address space as the rest
+of the code, so anything that a program can do with the \clanguage{}
+library, such as deleting files or transfer sensitive information to
+an external computer, can be done as a result of reading an external
+document.
+
 \section{Objectives for a Lisp operating system}
 
 The three main objectives of a Lisp operating system correspond to
