@@ -150,6 +150,23 @@ that could also be treated as any in-memory array by applications.
 As operating systems derived from \unix{} became widespread, these
 techniques were largely forgotten. 
 
+\subsection{Full address-space access}
+
+With operating systems such as \unix{}, programs written in low-level
+languages such as C are written so that they have access the full
+(virtual) address space%
+\footnote{Or sometimes half of it, the operating system kernel
+  occupying the other half.}
+except that such a program naturally can not access the contents of a
+virtual address that does not have any physical memory associated with
+it.
+
+Programs are written like that for historical reasons.  Early
+computers had no memory-management unit, so there was no way to
+prevent a program from accessing the contents of any address.
+Essentially, we still write programs today as if we were using
+computers with no memory-management unit.
+
 \section{Objectives for a Lisp operating system}
 
 The three main objectives of a Lisp operating system correspond to
