@@ -181,6 +181,25 @@ library, such as deleting files or transfer sensitive information to
 an external computer, can be done as a result of reading an external
 document.
 
+Recently, a technique called \emph{address space layout
+  randomization}%
+\footnote{https://en.wikipedia.org/wiki/Address\_space\_layout\_randomization}
+has started being used to prevent the problems caused by full
+address-space access.  The technique consists of giving the code of
+the main program and of the libraries that it uses different virtual
+addresses each time the programs is executed.  That way, a malicious
+document can not rely on the address to return to being at a
+particular location.
+
+Address space layout randomization has its own problems.  For one
+thing, a program can no longer be written to have predefined data
+structures with absolute virtual address at start-up.  Either relative
+addressing must be used (which complicates the code and thus makes it
+less maintainable), or such data structures must use symbolic
+addresses to be resolved by the dynamic linker at program start-up
+(which also complicates the code, but also slows down program start-up
+because of additional work that the linker must do).
+
 \section{Objectives for a Lisp operating system}
 
 The three main objectives of a Lisp operating system correspond to
