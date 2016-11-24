@@ -200,6 +200,40 @@ addresses to be resolved by the dynamic linker at program start-up
 (which also complicates the code, but also slows down program start-up
 because of additional work that the linker must do).
 
+\subsection{The concept of a kernel}
+
+The kernel of an operating system is a fairly large, monolithic
+program that is started when the computer is powered on. The kernel is
+not an ordinary program of the computer. It executes in a privileged
+state so that it has direct access to devices and to data structures
+that must be protected from direct use by user-level programs.
+
+The very existence of a kernel is problematic because the computer
+needs to be restarted whenever the kernel is updated, and then all
+existing state is lost, including open files and data structures that
+reside in volatile memory. Some programs, such as web browsers,
+compensate somewhat for this problem by remembering the open windows
+and the links that were associated with each window.
+
+The fact that the kernel is monolithic poses a problem because when
+code needs to be added to the kernel in the form of a kernel module,
+such code has full access to the entire computer system. This
+universal access represents a security risk, of course, but more
+commonly, it can be defective and then it will fail often by crashing
+the entire computer.
+
+We have had solutions to this problem for many decades. The Multics
+system, for example, did not have a kernel at all. An interrupt or a
+system call was executed by the user-level process that issued the
+system call or that happened to be executing when the interrupt
+arrived. The code that executed then was not part of a monolithic
+kernel, but existed as independent programs that could be added or
+replaced without restarting the system. The system could still crash,
+of course, if some essential system-wide data structure was corrupted,
+but most of the time, only the user-level process that issued the
+request would crash.
+
+
 \section{Objectives for a Lisp operating system}
 
 The three main objectives of a Lisp operating system correspond to
