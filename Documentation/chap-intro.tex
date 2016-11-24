@@ -222,6 +222,22 @@ universal access represents a security risk, of course, but more
 commonly, it can be defective and then it will fail often by crashing
 the entire computer.
 
+The problem with traditional kernels compared to the planned LispOS
+described in this document is similar to the difference between an
+executable file resulting from a program written in \clanguage{} and a
+\commonlisp{} system.%
+\footnote{Thanks to Daniel Kochmański for suggesting this comparison,
+  and for letting me use it here.}  In a traditional executable
+program created by the linker from a collection of modules, it is hard
+to replace an individual function.  The linker has turned the entire
+program into a monolithic executable in which addresses have been
+resolved once and for all.  Compare that situation to a typical
+\commonlisp{} system in which it is normal practice to replace a
+single function, redefine a class, or add a method to a generic
+function, without restarting the \commonlisp{} system.  The planned
+LispOS will be able to have parts of it updated, just as an ordinary
+\commonlisp{} system is able to do, without rebooting.
+
 We have had solutions to this problem for many decades. The Multics
 system, for example, did not have a kernel at all. An interrupt or a
 system call was executed by the user-level process that issued the
@@ -393,7 +409,7 @@ scheduling, etc.
 
 \subsection{Create a Lisp system to be used as basis}
 
-The first step is to create a \cl{} system that can be used as a basis
+The first step is to create a \commonlisp{} system that can be used as a basis
 for the Lisp operating system.  It should already allow for multiple
 environments, and it should be available on 64-bit platforms.
 Preferably, this system should use as little \clanguage{} code as
@@ -402,10 +418,10 @@ kernel.
 
 \subsection{Create a single-user system as a \unix{} process}
 
-In parallel with creating a new \cl{} system, it is possible to
+In parallel with creating a new \commonlisp{} system, it is possible to
 implement and test many of the features of the interface between the
 system and the users, such as the object store (probably without
-access control) using an existing \cl{} system running as a process in
+access control) using an existing \commonlisp{} system running as a process in
 an ordinary operating system.  
 
 The result of this activity would be sufficient to write or adapt
@@ -414,7 +430,7 @@ interface libraries, etc. for the system.
 
 \subsection{Create a multi-user system as a \unix{} process}
 
-With the new \cl{} system complete and the object store implemented,
+With the new \commonlisp{} system complete and the object store implemented,
 it will be possible to create a full multi-user system, including
 protection, as a \unix{} process, where the \unix{} system would play
 the role of a virtual machine, supplying essential services such as
