@@ -397,6 +397,23 @@ different environments.
 For more details on multiple environments, see
 \refChap{chap-environments}.
 
+\subsubsection{Safe concurrency}
+
+Any modern operating system must be written to handle
+\emph{concurrency}, both in terms of \emph{context switches} at
+arbitrary times, but especially in terms of \emph{multiple
+  simultaneous threads} of execution resulting from the execution of
+the system on a computer with multiple cores.
+
+In particular, we will guarantee the integrity of the system in the
+presence of concurrency, so that there are no race conditions that may
+cause the system to be in an undefined state.
+
+Furthermore, the global system garbage collector
+\seesec{chap-garbage-collection}, will itself be parallel and
+concurrent in order to take advantage of the existence of multiple
+cores, and in order to minimize pauses during garbage collection.
+
 \section{How to accomplish it}
 
 The most important aspect of a Lisp operating system is not that all
