@@ -327,19 +327,27 @@ a \emph{writer} method is not.
 
 \subsection{Single memory abstraction}
 
-Instead of two different memory abstractions (primary and
-secondary), the Lisp operating system would contain a single
-abstraction which looks like any interactive Lisp system, except
-that data is permanent.
+Current computers have two kinds of memory, a \emph{primary} memory
+which is fast, volatile, and expensive, and \emph{secondary} memory
+which is slow, permanent, and cheap.  In contrast, the Lisp operating
+system would present a single abstraction of the memory, which looks
+like any interactive Lisp system, except that data is permanent.
+
+In an implementation of a Lisp operating system on a current computer
+with two kinds of memory, the primary memory simply acts as a
+\emph{cache} for the secondary memory, so that the address of an
+object uniquely determines where in the secondary memory it is stored.
+The cache is managed as an ordinary \emph{virtual memory} with
+existing algorithms.
+
+There are some indications that future computers may feature new
+memory technology with is fast, permanent, and cheap.  An
+implementation of a Lisp operating system on such a computer will have
+the same abstraction of the memory, but its structure will be greatly
+simplified.
 
 Since data is permanent, application writers are encouraged to
 provide a sophisticated \emph{undo} facility.  
-
-The physical main (semiconductor) memory of the computer simply acts
-as a \emph{cache} for the disk(s), so that the address of an object
-uniquely determines where on the disk it is stored.  The cache is
-managed as an ordinary \emph{virtual memory} with existing
-algorithms. 
 
 \subsection{Other features}
 
