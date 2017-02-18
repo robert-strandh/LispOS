@@ -73,8 +73,8 @@ components to be modified.
 \end{itemize}
 
 Pipes also have some advantages though.  In particular, they provide a
-\emph{synchronization} mechanism between programs, making very easy to
-implement producer/consumer control structures.
+\emph{synchronization} mechanism between programs, making it very easy
+to implement producer/consumer control structures.
 
 It is an interesting observation that in most text books on
 operating systems, the concept of a process is presented as playing
@@ -126,7 +126,7 @@ transformed into an in-memory structure.
 
 \subsection{Distinction between primary and secondary memory}
 
-Current system (at least for desktop computers) make a very clear
+Current systems (at least for desktop computers) make a very clear
 distinction between primary and secondary memory.  Not only are the
 two not the same, but they also have totally different semantics:
 \begin{itemize}
@@ -169,9 +169,9 @@ computers with no memory-management unit.
 
 Full address-space access is a notorious source of security problems.
 If a program does not take great care to prevent a temporary buffer
-from overflowing, reading an external document such as web page may
+from overflowing, reading an external document such as a web page may
 overwrite part of the stack (which is located in the address space of
-the process).  Such buffer overflow can alter the return address of
+the process).  Such a buffer overflow can alter the return address of
 the currently executing function, so that instead of returning
 normally, it returns to some code that can have an effect that the
 program was absolutely not meant to have.  It can do that because the
@@ -197,15 +197,15 @@ structures with absolute virtual address at start-up.  Either relative
 addressing must be used (which complicates the code and thus makes it
 less maintainable), or such data structures must use symbolic
 addresses to be resolved by the dynamic linker at program start-up
-(which also complicates the code, but also slows down program start-up
-because of additional work that the linker must do).
+(which also complicates the code, but in addition slows down program
+start-up because of additional work that the linker must do).
 
 \subsection{The concept of a kernel}
 
 The kernel of an operating system is a fairly large, monolithic
 program that is started when the computer is powered on. The kernel is
 not an ordinary program of the computer. It executes in a privileged
-state so that it has direct access to devices and to data structures
+state so that it has full access to devices and to data structures
 that must be protected from direct use by user-level programs.
 
 The very existence of a kernel is problematic because the computer
@@ -215,12 +215,12 @@ reside in volatile memory. Some programs, such as web browsers,
 compensate somewhat for this problem by remembering the open windows
 and the links that were associated with each window.
 
-The fact that the kernel is monolithic poses a problem because when
+The fact that the kernel is monolithic poses a problem; because, when
 code needs to be added to the kernel in the form of a kernel module,
 such code has full access to the entire computer system. This
 universal access represents a security risk, of course, but more
-commonly, it can be defective and then it will fail often by crashing
-the entire computer.
+commonly, the module can be defective and then it will fail often by
+crashing the entire computer.
 
 The problem with traditional kernels compared to the planned LispOS
 described in this document is similar to the difference between an
@@ -253,7 +253,7 @@ request would crash.
 \section{Objectives for a Lisp operating system}
 
 The three main objectives of a Lisp operating system correspond to
-solutions to the two main problems with exiting systems as indicated
+solutions to the two main problems with existing systems as indicated
 in the previous section.
 
 \subsection{Single address space}
@@ -346,7 +346,7 @@ algorithms.
 \subsubsection{Crash proof (maybe)}
 
 There is extensive work on crash-proof systems, be it operating
-systems or data base systems.  In our opinion, this work is
+systems or database systems.  In our opinion, this work is
 confusing in that the objective is not clearly stated.
 
 Sometimes the objective is stated as the desire that no data be lost
@@ -357,7 +357,7 @@ controlled way.
 
 Other times, the objective is stated as a protection against
 defective software, so that data is stored at regular intervals
-(checkpointing) perhaps combined with a \emph{transaction log} so
+(checkpointing), perhaps combined with a \emph{transaction log} so
 that the state of the system immediately before a crash can always
 be recovered.  But it is very hard to protect oneself against
 defective software.  There can be defects in the checkpointing code
@@ -448,8 +448,8 @@ interface libraries, etc. for the system.
 \subsection{Create a multi-user system as a \unix{} process}
 
 With the new \commonlisp{} system complete and the object store implemented,
-it will be possible to create a full multi-user system, including
-protection, as a \unix{} process, where the \unix{} system would play
+it will be possible to create a full multi-user system (including
+protection) as a \unix{} process, where the \unix{} system would play
 the role of a virtual machine, supplying essential services such as
 input/output, networking, etc. 
 

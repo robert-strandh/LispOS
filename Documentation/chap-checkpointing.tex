@@ -34,7 +34,7 @@ and only if the page has been modified since the beginning of the
 \emph{current} checkpoint cycle.  We use the word \emph{page instance}
 to refer to a particular version of a particular page. 
 
-A page can be associated with a \emph{frame}%
+A page can be associated with a \emph{frame}.%
 \footnote{A \emph{frame} is the main-memory instance of a page.}  An
 attempt to access a page that is not associated with a frame results
 in a \emph{page fault}.  At most one version of a particular page can
@@ -96,7 +96,7 @@ for version $1$.
 At any point in time, there exist three version tables; two on disk
 and one in main memory.  The two versions on disk play the same role
 as the disk tables in EROS, i.e., while one of them is being updated,
-the other is till complete and accurate.  A single bit in the boot
+the other is still complete and accurate.  A single bit in the boot
 sector of the disk selects which one should be used at boot time.
 When a new version table needs to be written to disk, it is first
 written to the place of the unused disk table, and then the boot
@@ -138,7 +138,7 @@ version table directory is scanned.  Whenever a directory entry with
 the bit indicating the existence of pages with several versions set,
 the page of the directory entry is saved to disk.  When the entire
 version table has been scanned, a new boot sector is written
-indicating that the newly saved table is the current one.
+to indicate that the newly saved table is the current one.
 
 The final action to take in order to finish the current checkpointing
 cycle and begin a new one is an \emph{atomic flip}.  This atomic flip

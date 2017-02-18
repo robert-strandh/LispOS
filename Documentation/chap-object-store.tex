@@ -14,7 +14,7 @@ attribute value can be any object.
 {|>{\setlength\hsize{.2\hsize}}X|%
   >{\setlength\hsize{.8\hsize}}X|}
 \hline
-Keyword & Possible-values\\
+Keyword & Possible values\\
 \hline\hline
 \textbf{category} &
 
@@ -46,21 +46,13 @@ chosen from an editable set that is defined per user.\\
 \textbf{format} &
 
 This attribute can be used to identify the file type of documents such
-as \textbf{PDF}, \textbf{ogg/vorbis}, \textbf{MPEG4} \textbf{PNG}, in
+as \textbf{PDF}, \textbf{ogg/vorbis}, \textbf{MPEG4}, \textbf{PNG}, in
 which case the attribute can be assigned automatically, but also to
 identify the source format of files in a directory containing
 things like articles or user manuals, for
 example \textbf{LaTeX}, \textbf{Texinfo}, \textbf{HTML}.  These would
 be chosen from an editable set that is defined per user. \\
 \hline
-\end{tabularx}
-
-\begin{tabularx}{\linewidth}%
-{|>{\setlength\hsize{.2\hsize}}X|%
-  >{\setlength\hsize{.8\hsize}}X|}
-\hline
-Keyword & Possible-values\\
-\hline\hline
 \textbf{date of creation} &
 
 A date interval.\\
@@ -94,18 +86,18 @@ would be chosen from an editable set that is defined per user.\\
 
 In a typical operating system installation, there are many fairly
 large objects such as movies, music files, pictures, etc.  The amount
-data associated with such an object that would be stored in the object
-store is typically very small compared to the object itself.  Even a
-fairly modest text file probably has $10^4 - 10^5$ characters in it,
-whereas the meta-data probably takes up no more than $10^2 - 10^3$
-bytes.  It is therefore likely that the entire object store will fit
-in main memory.  Scanning the entire object store would then take at
-most a few second of CPU time.  For better performance, one or more
+of data associated with such an object that would be stored in the
+object store is typically very small compared to the object itself.
+Even a fairly modest text file probably has $10^4 - 10^5$ characters
+in it, whereas the meta-data probably takes up no more than $10^2 -
+10^3$ bytes.  It is therefore likely that the entire object store will
+fit in main memory.  Scanning the entire object store would then take
+at most a few second of CPU time.  For better performance, one or more
 \emph{indexes} could be created.  The objects could for instance be
 divided by \emph{category}.
 
 Searching the object store amounts to defining a \emph{filter},
-i.e. a function that, given a set of keyword/value pairs returns
+i.e. a function that, given a set of keyword/value pairs, returns
 \emph{true} if and only if the corresponding object should be included
 in the search result.  The result is returned to the user in the form
 of a \emph{directory object} which is a list of \emph{object entries}

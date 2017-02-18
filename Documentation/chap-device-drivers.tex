@@ -59,7 +59,8 @@ This class is an instantiable subclass of the class \texttt{disk}.
 
 \Defgeneric {size} {disk}
 
-Return the number of blocks that \textit{disk} may store.
+Return the number of blocks that \textit{disk} may store, so excluding
+bad blocks.
 
 \Defgeneric {block-size} {disk}
 
