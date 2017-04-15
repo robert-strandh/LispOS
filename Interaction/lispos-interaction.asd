@@ -4,4 +4,5 @@
   :depends-on (:mcclim)
   :components
   ((:file "packages")
-   (:file "object-types")))
+   (:file "object-types")
+   (:file "store")))
