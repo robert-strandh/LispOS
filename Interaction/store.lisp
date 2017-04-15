@@ -40,7 +40,7 @@
     :performer (random-person)))
 
 (defparameter *store*
-  (append (loop repeat 10000
+  (append (loop repeat 1000
                 collect (cond ((< (random 1.0) 0.4) (random-text-document))
                               (t  (random-music))))
           (coerce *people* 'list)))
