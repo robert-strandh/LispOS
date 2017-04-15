@@ -5,4 +5,5 @@
   :components
   ((:file "packages")
    (:file "object-types")
-   (:file "store")))
+   (:file "store")
+   (:file "presentations")))
