@@ -32,3 +32,9 @@
   (make-instance 'text-document
     :author (random-person)
     :contents (random-text)))
+
+(defun random-music ()
+  (make-instance 'music
+    :author (random-person)
+    :composer (random-person)
+    :performer (random-person)))
