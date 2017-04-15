@@ -2,7 +2,7 @@
 
 (defclass object ()
   ((%creation-date
-    :initform nil
+    :initform (get-universal-time)
     :initarg :creation-date
     :reader creation-date)
    (%modification-date
@@ -19,7 +19,8 @@
   ())
 
 (defclass music (sound)
-  ((%composer :initarg :composer :reader composer)))
+  ((%composer :initarg :composer :reader composer)
+   (%performer :initarg :performer :reader performer)))
 
 (defclass person (object)
   ((%name :initarg :name :accessor name)))
