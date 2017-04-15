@@ -6,4 +6,5 @@
   ((:file "packages")
    (:file "object-types")
    (:file "store")
-   (:file "presentations")))
+   (:file "presentations")
+   (:file "browser")))
