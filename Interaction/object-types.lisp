@@ -9,7 +9,7 @@
     :accessor modification-date)
    (%author
     :initarg :author
-    :reader :author)))
+    :reader author)))
 
 (defmethod initialize-instance :after ((object object) &key)
   (setf (modification-date object)
