@@ -38,3 +38,9 @@
     :author (random-person)
     :composer (random-person)
     :performer (random-person)))
+
+(defparameter *store*
+  (append (loop repeat 10000
+                collect (cond ((< (random 1.0) 0.4) (random-text-document))
+                              (t  (random-music))))
+          (coerce *people* 'list)))
