@@ -415,7 +415,9 @@ the system on a computer with multiple cores.
 
 In particular, we will guarantee the integrity of the system in the
 presence of concurrency, so that there are no race conditions that may
-cause the system to be in an undefined state.
+cause the system to be in an undefined state.  We accomplish this
+guarantee by well known techniques such as locks, lock-free data
+structures, transactional memory, etc.
 
 Furthermore, the global system garbage collector
 \seesec{chap-garbage-collection}, will itself be parallel and
