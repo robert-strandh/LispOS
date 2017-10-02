@@ -1,2 +1,61 @@
 \chapter{Use cases}
 
+In this appendix, we consider particular ``use cases'' or
+``scenarios'', i.e. common situations that the user will need to
+handle.  The purpose of this exercise is twofold:
+
+\begin{enumerate}
+\item To give the readers of this specification an idea of how the
+  system might be used.
+\item To determine the requirements of the object store
+  \seechap{chap-object-store} based on real situations that it must
+  handle, or not.
+\end{enumerate}
+
+\section{Opening a document for reading}
+
+This scenario is defined by the fact that the user wants to start the
+execution of some application, while giving it a particular document,
+presumably of the type that this application can handle.  Examples of
+such situation are:
+
+\begin{itemize}
+\item The user wants to read a text document in PDF format.%
+  \footnote{Notice that PDF is a way of storing a structured document
+    in a file consisting of a sequence of bytes.  This is not the kind
+    of document we mean here.  We rather mean some structured version
+    of the document containing the same sections as the PDF
+    specification requires, but that is not stored as a sequence of
+    bytes, but rather as a graph of instances of classes that together
+    represent such a document.}
+\item The user wants to watch a particular movie.
+\item The user wants to listen to some piece of music.
+\end{itemize}
+
+In all these cases, there are several ways in which the scenario can
+play out:
+
+\begin{itemize}
+\item The user might be interacting with a listener, and the user
+  knows some \commonlisp{} form (perhaps the name of a special
+  variable) to type in order to obtain the desired document.  In this
+  case, the user calls the top-level function of the application,
+  passing it the result of the form as an argument.
+\item The user might be interacting with a listener, but the document
+  is somewhere in the object store.  Then the user first issues a
+  request to the object store, perhaps with the document type and the
+  title (or part of the title).  The object store then presents%
+  \footnote{By ``present'', we mean that the output is in the form of
+    \clim{} presentations that are clickable.} the documents that
+  correspond to the query.  Finally the user types the name of the
+  application, but instead of giving a form as an argument, he or she
+  clicks on the relevant presentation.
+\item The user might already be interacting with the right
+  application.  Therefore, he or she asks the application to read a
+  different (or another) document.  By doing this, the application
+  starts a ``document selector'' that allows the user to either type a
+  \commonlisp{} form with the new document as its value, or to issue a
+  request to the object store.  When the user selects the document, it
+  becomes the reusult of the call to the document selector, and the
+  application starts the execution on the new document.
+\end{itemize}
