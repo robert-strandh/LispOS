@@ -4,9 +4,17 @@
 \section{Introduction}
 
 Contrary to traditional operating systems such as \unix{}, a Lisp
-operating system will need a global \emph{garbage collector}.  There 
-is a rich literature (see e.g., \cite{Jones:2011:GCH:2025255}) on the
-subject. 
+operating system will need a global \emph{tracing garbage collector}.
+Traditional operating systems get away with a simpler technique,
+because the file system in such an operating system can not contain
+cycles.  With this restriction, the simpler \texttt{reference
+  counting} mechanism is sufficient.  Furthermore, although reference
+counting is usually slower than a tracing garbage collector, the
+additional overhead of reference counters is of no importance when
+used for a file system in secondary memory.
+
+There is a rich literature on automatic memory management.
+(see e.g., \cite{Jones:2011:GCH:2025255})
 
 \section{Per-thread garbage collector}
 
