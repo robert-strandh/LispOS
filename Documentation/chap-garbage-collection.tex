@@ -34,6 +34,15 @@ maintain allocation order.  This way, we have a precise measure of the
 relative age of the objects, so that we can promote only the oldest
 objects when required. 
 
+There can be no references between an object in one local heap to an
+object in another local heap.  And there can be no references from the
+global heap to a local heap.  Whenever a reference is about to be
+created from an object in the global heap to an object in the local
+heap, this attempt is caught by a \emph{write barrier} on the global
+heap.  As a result if this write barrier being tripped, the object in
+the local heap being referred to (and its transitive closure) will
+migrate to the global heap, thereby preserving the genera invariant.
+
 \section{Global garbage collector}
 
 In addition to the thread-local heaps, there is a global heap.  The
