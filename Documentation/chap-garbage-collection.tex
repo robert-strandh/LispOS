@@ -51,3 +51,11 @@ garbage collector for this heap will use a combination of the
 traditional \emph{mark-and-sweep} collector and an ordinary memory
 allocator, similar to the one used by the \clanguage{} functions
 \texttt{malloc} and \texttt{free}.
+
+Recall that that a heap-allocated object is either a \texttt{cons}
+cell or a \emph{general instance}.  A \texttt{cons} cell is
+represented as two machine words.  A general instance is represented
+as a \emph{header} consisting of two machine words, and a \emph{rack}
+which is a vector of words with a contents that depends on the exact
+type of the object.  In both cases, then, a reference to a
+heap-allocated object is a reference to a double word.
