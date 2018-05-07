@@ -59,3 +59,14 @@ as a \emph{header} consisting of two machine words, and a \emph{rack}
 which is a vector of words with a contents that depends on the exact
 type of the object.  In both cases, then, a reference to a
 heap-allocated object is a reference to a double word.
+
+Given this representation, we separate the headers from the racks, so
+that \texttt{cons} cells and headers of general instances are
+allocated from a separate part of the global heap.  Since this part of
+the global heap consists of only two-word objects, it can be managed
+very efficiently with a \emph{mark-and-sweep} garbage collector, using
+a simple free list.  The advantage of this technique is that an object
+is never moved as a result of a garbage collection.  Therefore, any
+reference to an object that is shared between several threads, remains
+valid after a garbage collection of the global heap.
+
