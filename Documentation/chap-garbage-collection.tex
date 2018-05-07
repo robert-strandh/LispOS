@@ -17,10 +17,11 @@ There is a rich literature on automatic memory management.
 (see e.g., \cite{Jones:2011:GCH:2025255})
 
 For \sysname{}, we plan to have a two-level memory management
-technique.  The low level consists of a relatively small heap for each
-thread, and a per-thread garbage collector that manages that heap.
-The higher-level contains long-lived objects and objects that are
-shared between several threads.
+technique.  The low level consists of a relatively small local heap
+for each thread, and a per-thread garbage collector that manages that
+heap.  The higher-level consists of a global heap that contains
+long-lived objects and objects that are shared between several
+threads.
 
 \section{Per-thread garbage collector}
 
