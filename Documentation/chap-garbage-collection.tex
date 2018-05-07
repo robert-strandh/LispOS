@@ -42,7 +42,7 @@ created from an object in the global heap to an object in the local
 heap, this attempt is caught by a \emph{write barrier} on the global
 heap.  As a result if this write barrier being tripped, the object in
 the local heap being referred to (and its transitive closure) will
-migrate to the global heap, thereby preserving the genera invariant.
+migrate to the global heap, thereby preserving the general invariant.
 
 \section{Global garbage collector}
 
