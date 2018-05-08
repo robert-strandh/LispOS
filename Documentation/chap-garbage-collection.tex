@@ -70,3 +70,13 @@ is never moved as a result of a garbage collection.  Therefore, any
 reference to an object that is shared between several threads, remains
 valid after a garbage collection of the global heap.
 
+The marking phase is done by first requesting each thread to do a
+garbage collection and to mark any object in the global heap that is
+referred to by local objects.  When all threads have responded, a
+global collection is started.  The global collection is done
+concurrently with thread activity.  For that reason, objects allocated
+in the global heap during this phase are marked as being live.
+The global collection traces the global heap starting with objects
+marked by the mutator threads.  This tracing uses a standard
+three-color algorithm.  Write operations to the global heap are caught
+by a write barrier.
