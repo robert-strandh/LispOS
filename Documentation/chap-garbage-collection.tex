@@ -80,3 +80,10 @@ The global collection traces the global heap starting with objects
 marked by the mutator threads.  This tracing uses a standard
 three-color algorithm.  Write operations to the global heap are caught
 by a write barrier.
+
+When tracing in the global heap is finished, the part of the global
+heap that contains two-word headers and \texttt{cons} cells is scanned
+and unmarked cells are collected into a free list.  If an unmarked
+cell is a \texttt{cons} cell, then no further action is needed.  If an
+unmarked cell is a header object, then the corresponding rack is
+returned to the rack part of the global heap.
