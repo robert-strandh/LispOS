@@ -87,15 +87,20 @@ modifying the data of some other application.  In reality, there are
 several ways of obtaining such security, and separate address spaces
 should be considered to be a method with too many disadvantages. 
 
-Nowadays, computers have addresses that are 64 bit wide, making it
-possible to address almost 20 exabytes of data.  To get an idea of the
-order of magnitude of such a number, consider that a fairly large disc
-that can hold a terabyte of data.  Then each byte of 20 million such
-discs can be directly addressed by the processor.  We can thus
-consider the problem of too small an address space to be solved.  The
-design of \sysname{} takes advantage of this large address space to
-find better solutions to the problems that processes were intended to
-solve.
+Nowadays, computers have addresses%
+\footnote{The virtual address is 64 bits wide.  That does not mean
+  that all 64 bits are used on all implementations of the
+  architectures.  However, on the current (as of this writing) Intel
+  and AMD x86-64 processors, at least 48 bits are used, and this
+  number is likely to increase in the future.}
+that are 64 bit wide, making it possible to address almost 20 exabytes
+of data.  To get an idea of the order of magnitude of such a number,
+consider that a fairly large disc that can hold a terabyte of data.
+Then each byte of 20 million such discs can be directly addressed by
+the processor.  We can thus consider the problem of too small an
+address space to be solved.  The design of \sysname{} takes advantage
+of this large address space to find better solutions to the problems
+that processes were intended to solve.
 
 \subsection{Hierarchical file systems}
 
@@ -170,7 +175,11 @@ computers with no memory-management unit.
 Full address-space access is a notorious source of security problems.
 If a program does not take great care to prevent a temporary buffer
 from overflowing, reading an external document such as a web page may
-overwrite part of the stack (which is located in the address space of
+overwrite part of the stack%
+\footnote{Problems with buffer overflow are not limited to the stack,
+  of course.  Overflowing a buffer located on the heap is a security
+  problem as well.}
+(which is located in the address space of
 the process).  Such a buffer overflow can alter the return address of
 the currently executing function, so that instead of returning
 normally, it returns to some code that can have an effect that the
@@ -213,7 +222,7 @@ needs to be restarted whenever the kernel is updated, and then all
 existing state is lost, including open files and data structures that
 reside in volatile memory. Some programs, such as web browsers,
 compensate somewhat for this problem by remembering the open windows
-and the links that were associated with each window.
+and the addresses that were associated with each window.
 
 The fact that the kernel is monolithic poses a problem; because, when
 code needs to be added to the kernel in the form of a kernel module,
@@ -247,8 +256,8 @@ kernel, but existed as independent programs that could be added or
 replaced without restarting the system. The system could still crash,
 of course, if some essential system-wide data structure was corrupted,
 but most of the time, only the user-level process that issued the
-request would crash.
-
+request would crash, simply because the problem was limited to the
+address space of a single process.
 
 \section{Objectives for a Lisp operating system}
 
@@ -275,6 +284,15 @@ only code that has been produced from the high-level notation of the
 language and which excludes arbitrary pointer arithmetic so that the
 application can only address its own data.  This technique is
 sometimes called "trusted compiler".
+
+In order for the compiler to be trusted, some optimizations that
+current \commonlisp{} compilers allow, must be ruled out.  Examples of
+such optimizations are avoiding array-bounds checking (typically when
+the \texttt{safety} quality is set to $0$) or trusting the programmer
+with \texttt{dynamic-extent} declarations.  Such optimizations could
+still be allowed in system code, but installing such code would
+require additional privileges, equivalent to those of system
+administrators on current operating systems.
 
 It might sometimes be desirable to write an application in a
 low-level language like C or even assembler, or it might be
