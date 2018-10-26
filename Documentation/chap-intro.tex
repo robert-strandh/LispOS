@@ -158,8 +158,8 @@ techniques were largely forgotten.
 \subsection{Full address-space access}
 
 With operating systems such as \unix{}, programs written in low-level
-languages such as C are written so that they have access to the full
-(virtual) address space%
+languages such as \clanguage{} are written so that they have access to
+the full (virtual) address space%
 \footnote{Or sometimes half of it, the operating system kernel
   occupying the other half.}
 except that such a program naturally can not access the contents of a
@@ -172,8 +172,16 @@ prevent a program from accessing the contents of any address.
 Essentially, we still write programs today as if we were using
 computers with no memory-management unit.
 
-Full address-space access is a notorious source of security problems.
-If a program does not take great care to prevent a temporary buffer
+Full address-space access is a notorious source of security problems,
+in particular in combination with a programming language like
+\clanguage{}.  The \clanguage{} language specification leaves many situations
+unspecified, and most compilers take advantage of this freedom to
+optimize for speed, to the detriment of other aspects such as
+security.  As a result, it is possible for \clanguage{} programs to construct
+arbitrary data and arbitrary addresses and alter large parts of its
+addressable memory in uncontrolled ways.
+
+Thus if a program does not take great care to prevent a temporary buffer
 from overflowing, reading an external document such as a web page may
 overwrite part of the stack%
 \footnote{Problems with buffer overflow are not limited to the stack,
@@ -190,17 +198,20 @@ library, such as deleting files or transfer sensitive information to
 an external computer, can be done as a result of reading an external
 document.
 
-Recently, a technique called \emph{address space layout
-  randomization}%
+There have been attempts to mitigate these basic problems with a
+fully accessible address space.  Recently, for instance, a technique
+called \emph{address space layout randomization}%
 \footnote{https://en.wikipedia.org/wiki/Address\_space\_layout\_randomization}
 has started being used to prevent the problems caused by full
 address-space access.  The technique consists of giving the code of
 the main program and of the libraries that it uses different virtual
 addresses each time the programs is executed.  That way, a malicious
 document can not rely on the address to return to being at a
-particular location.
+particular location, and defective programs that do not check for
+buffer overflow can continue to exist without so much danger in terms
+of security.
 
-Address space layout randomization has its own problems.  For one
+But address space layout randomization has its own problems.  For one
 thing, a program can no longer be written to have predefined data
 structures with absolute virtual address at start-up.  Either relative
 addressing must be used (which complicates the code and thus makes it
@@ -208,6 +219,11 @@ less maintainable), or such data structures must use symbolic
 addresses to be resolved by the dynamic linker at program start-up
 (which also complicates the code, but in addition slows down program
 start-up because of additional work that the linker must do).
+
+In summary, then, a system in which a user program executes in a
+process with an address space to which the code has full access will
+always have problems in terms of security, performance,
+maintainability, or a combination of those.
 
 \subsection{The concept of a kernel}
 
@@ -295,7 +311,7 @@ require additional privileges, equivalent to those of system
 administrators on current operating systems.
 
 It might sometimes be desirable to write an application in a
-low-level language like C or even assembler, or it might be
+low-level language like \clanguage{} or even assembler, or it might be
 necessary to run applications that have been written for other
 systems.  Such applications could co-exist with the normal ones, but
 they would have to work in their own address space as with current
