@@ -273,7 +273,9 @@ replaced without restarting the system. The system could still crash,
 of course, if some essential system-wide data structure was corrupted,
 but most of the time, only the user-level process that issued the
 request would crash, simply because the problem was limited to the
-address space of a single process.
+address space of a single process.  Multics did not have a kernel, but
+it still had the problem of full access to its own address space, so
+that the stack could be overwritten by a defective end-user program.
 
 \section{Objectives for a Lisp operating system}
 
