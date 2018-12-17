@@ -315,14 +315,14 @@ system a \emph{controlled access system}%
 where a process has full access to its address space, an
 \emph{arbitrary access system}.
 
-In order for the compiler to be trusted, some optimizations that
-current \commonlisp{} compilers allow, must be ruled out.  Examples of
-such optimizations are avoiding array-bounds checking (typically when
-the \texttt{safety} quality is set to $0$) or trusting the programmer
-with \texttt{dynamic-extent} declarations.  Such optimizations could
-still be allowed in system code, but installing such code would
-require additional privileges, equivalent to those of system
-administrators on current operating systems.
+In order for access to be completely controlled, some optimizations
+that current \commonlisp{} compilers allow, must be ruled out.
+Examples of such optimizations are avoiding array-bounds checking
+(typically when the \texttt{safety} quality is set to $0$) or trusting
+the programmer with \texttt{dynamic-extent} declarations.  Such
+optimizations could still be allowed in system code, but installing
+such code would require additional privileges, equivalent to those of
+system administrators on current operating systems.
 
 It might sometimes be desirable to write an application in a
 low-level language like \clanguage{} or even assembler, or it might be
