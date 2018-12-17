@@ -55,23 +55,24 @@ instructions for input/output or for remapping the address space.
 
 In \sysname{}, the normal mode of execution is \emph{supervisor mode}.
 The code executed by the user is translated to machine code by a
-\emph{trusted compiler} which is known not to generate code that, if
-executed, might represent a risk to the integrity of the system.
-Since no remapping of the address space is required as a result of an
-\emph{interrupt} or a \emph{trap}, such events can be handled very
-quickly. 
+compiler which is known not to generate code that, if executed, might
+represent a risk to the integrity of the system.  Since no remapping
+of the address space is required as a result of an \emph{interrupt} or
+a \emph{trap}, such events can be handled very quickly.
 
 Occasionally, it might be useful to write or install some software
-that is compiled to machine code by some compiler that can not be
-trusted.  The result of such a compilation or installation is a single
-(possibly large) Lisp function.  When this function is executed, the
-mode of execution is switched to \emph{user mode}.  As with
-traditional modern operating systems, the code of such software has
-its own \emph{address space}, which means that it can not directly
-manipulate \sysname{} capabilities.  Instead, it has to communicate
-with the system through the user of \emph{system calls}.  A
-system-wide object is referred to by such code through an interposing
-\emph{object descriptor}, much like a file descriptor in \unix{}.  The
-details of this mechanism have not yet been fully determined.
+that is compiled to machine code by some compiler that does not
+necessarily generate code with controlled access, such as a compiler
+for some typical low-level programming language used today.  The
+result of such a compilation or installation is a single (possibly
+large) Lisp function.  When this function is executed, the mode of
+execution is switched to \emph{user mode}.  As with traditional modern
+operating systems, the code of such software has its own \emph{address
+  space}, which means that it can not directly manipulate \sysname{}
+capabilities.  Instead, it has to communicate with the system through
+the user of \emph{system calls}.  A system-wide object is referred to
+by such code through an interposing \emph{object descriptor}, much
+like a file descriptor in \unix{}.  The details of this mechanism have
+not yet been fully determined.
 
 
