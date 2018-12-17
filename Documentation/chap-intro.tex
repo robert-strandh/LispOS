@@ -300,8 +300,20 @@ others as well) propose a solution to this problem by simply not
 allowing users to execute arbitrary machine code.  Instead, they allow
 only code that has been produced from the high-level notation of the
 language and which excludes arbitrary pointer arithmetic so that the
-application can only address its own data.  This technique is
-sometimes called "trusted compiler".
+application can only address its own data.  We shall call this kind of
+system a \emph{controlled access system}%
+\footnote{In the literature, this technique is sometimes called
+  "trusted compiler", be we want to avoid that terminology in this
+  document, because it suggests that the compiler must somehow be
+  formally verified correct in order for this technique to be useful.
+  Technically, the typical modern operating system would then have to
+  be formally verified correct in order for the separation of address
+  spaces to be a trusted mechanism.  Clearly, we use such modern
+  operating systems on a daily basis without any such formal
+  verification, and we are reasonably sure that it respects that
+  separation.} and we shall call the typical modern operating system
+where a process has full access to its address space, an
+\emph{arbitrary access system}.
 
 In order for the compiler to be trusted, some optimizations that
 current \commonlisp{} compilers allow, must be ruled out.  Examples of
