@@ -279,17 +279,18 @@ that the stack could be overwritten by a defective end-user program.
 
 \subsection{Mediocre input/output performance}
 
-Recent research \cite{Barroso:2017:AKM:3069398.3015146} indicates that
-the performance of input and output in traditional kernel-based
-systems is not good enough for some of the modern devices now becoming
-available.  Recall that, in order to perform some input or output, an
-application program must make a system call so that the kernel can
-perform the operation on behalf of the application.  Things are
-organized this way in order to prevent application programs from
-directly accessing devices so as to protect those devices from getting
-incorrect controls.  Thus, input and output requires a \emph{context
-  switch} which consists of the \emph{system call} itself, a change of
-the \emph{page table} for address translation, and \emph{flushing the
+Recent research \cite{Barroso:2017:AKM:3069398.3015146}
+\cite{Waddington:2018:SCC:3289258.3186331} indicates that the
+performance of input and output in traditional kernel-based systems is
+not good enough for some of the modern devices now becoming available.
+Recall that, in order to perform some input or output, an application
+program must make a system call so that the kernel can perform the
+operation on behalf of the application.  Things are organized this way
+in order to prevent application programs from directly accessing
+devices so as to protect those devices from getting incorrect
+controls.  Thus, input and output requires a \emph{context switch}
+which consists of the \emph{system call} itself, a change of the
+\emph{page table} for address translation, and \emph{flushing the
   cache} since virtual addresses are no longer valid.  Such a context
 switch typically takes around $1 \mu s$.
 
