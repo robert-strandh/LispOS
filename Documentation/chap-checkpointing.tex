@@ -194,9 +194,52 @@ bytes.  Recall that \sysname{} treats primary memory as a cache for
 secondary memory.  Therefore, the pages on the secondary storage
 device can be considered as making up the complete address space of
 \sysname{}.  As such, they have unique numbers, starting at $0$.
+In the example system, the unique page number would occupy bits $41 -
+12$ of a pointer.
 
 However, with the technique described in this section, the unique page
 number does not correspond to any fixed location on the secondary
 storage device.  Instead, the location of a particular page can vary
-over time.
+over time.  But when a page fault for a particular unique page number
+occurs, the location of the page on secondary storage must be known.
+For that reason, we keep a \emph{page map} in main memory.  In the
+example system, this page map would consist of $2^{30}$ $4$-byte
+entries, for a total of $2^{32}$ bytes of main memory.
 
+With the technique described in this section, the secondary storage
+device represents a very large \emph{queue} where each element of the
+queue is called a \emph{segment}.  Such a segment represents a unit of
+checkpointing.  New segments are added to the tail of the queue.  Old
+segments are removed from the head of the queue as described below.
+
+A segment consists of a \emph{header} containing metadata about the
+contents of the segment, and of a certain number of pages that may
+have been modified since the previous checkpoint.  Again, to make the
+description more concrete, let us imagine that the number of pages in
+a segment is around $250$ or so, for a total of around $1MB$ of page
+data.  A segment is written as a unit to the secondary storage device.
+If that device is a disk, then the seek time and rotation delay of the
+disk will not significantly impact the transfer of the segment to the
+disk, because the size of the segment is sufficiently large that the
+data-transfer time will dominate.
+
+Furthermore, it is advantageous to keep the secondary storage device
+nearly full, because then (if the device is a disk) the head and the
+tail of the queue will be physically close, thereby minimizing seek
+time.
+
+The header of a segment contains:
+
+\begin{itemize}
+\item A list of the unique page number of each of the pages in the
+  segment.  For the example segment size, this information occupies
+  around $1KB$.
+\item A SHA value calculated from the data in the segment.
+\item The position of the head of the queue, i.e. the position of the
+  first segment to be removed from the secondary device.
+\end{itemize}
+
+In addition to the queue of segments, the secondary storage device
+contains a single word of information, indicating the tail of the
+queue, i.e. the position on the device of the last checkpoint segment
+that was written.
