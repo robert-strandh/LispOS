@@ -243,3 +243,21 @@ In addition to the queue of segments, the secondary storage device
 contains a single word of information, indicating the tail of the
 queue, i.e. the position on the device of the last checkpoint segment
 that was written.
+
+The first thing we need to verify at this point is that it is possible
+to boot the system, given only the information on the secondary
+storage device.  Here is how the system would be booted:
+
+\begin{enumerate}
+\item Read the information indicating where the tail of the queue is
+  located.
+\item Using this information, read the metadata of the last
+  checkpointing segment that was written.
+\item From this metadata, retrieve the information about the head of
+  the queue.
+\item Read each segment from the head to the tail of the queue,
+  constructing the page map from the metadata of each segment.
+\item Load initial pages into main memory, setting up the page tables
+  as appropriate.
+\item Jump to the entry point of the system.
+\end{enumerate}
