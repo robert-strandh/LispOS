@@ -26,7 +26,7 @@ Checkpointing is divided into \emph{cycles} delimited by
 \emph{snapshots}.  At any point in time, two checkpointing cycles are
 important.  The \emph{current} checkpointing cycle started at the
 last snapshot and is still going on.  The \emph{previous}
-checkpointing cycle is the one that ended at the last snapshot. 
+checkpointing cycle is the one that ended at the last snapshot.
 
 A page can exist in one, two, or three \emph{versions}, located in
 three different places on disk.  Version $0$ of the page is the oldest
@@ -39,7 +39,7 @@ previous checkpoint cycle.  Version $2$ of the page is the
 \emph{current} version of the page.  Version $2$ of the page exists if
 and only if the page has been modified since the beginning of the
 \emph{current} checkpoint cycle.  We use the word \emph{page instance}
-to refer to a particular version of a particular page. 
+to refer to a particular version of a particular page.
 
 A page can be associated with a \emph{frame}.%
 \footnote{A \emph{frame} is the main-memory instance of a page.}  An
@@ -70,7 +70,7 @@ to the page instance associated with the frame.  Finally, the latest
 version of the requested page is associated with the selected frame.
 If the latest version of the requested page is either version $0$ or
 version $1$, then the frame is write protected before execution
-resumes. 
+resumes.
 
 As indicated above, when a write fault occurs, the frame written to
 must be associated with either version $0$ or version $1$ of a page.
@@ -86,7 +86,7 @@ association of the frame is modified so that it henceforth is
 associated with version $2$ of the page, and again the frame is
 unprotected before execution resumes.  If the frame is dirty, then its
 contents are first written to the associated page instance.  Then the
-association is changed as before. 
+association is changed as before.
 
 To determine the disk location of each version of each page, we use a
 \emph{version table}.  The version table is just a sequence of bytes,
@@ -98,7 +98,7 @@ not used.  The next two bits indicate the location of version $1$ of
 the page, with the same meaning as before, except that $11$ means that
 there is no version $1$ of the page.  The final two bits indicate the
 location of version $2$ of the page with the same interpretation as
-for version $1$. 
+for version $1$.
 
 At any point in time, there exist three version tables; two on disk
 and one in main memory.  The two versions on disk play the same role
@@ -107,7 +107,7 @@ the other is still complete and accurate.  A single bit in the boot
 sector of the disk selects which one should be used at boot time.
 When a new version table needs to be written to disk, it is first
 written to the place of the unused disk table, and then the boot
-sector is written with a flipped selection bit. 
+sector is written with a flipped selection bit.
 
 The version table in main memory is represented in two levels with a
 \emph{directory} of pages.  If one page is 4kiB, then one page can
@@ -129,7 +129,7 @@ unused ones (if only version $0$ of the page exists) or the only
 unused one (if both version $0$ and version $1$ of the page exists).
 The location for version $2$ of the page is indicated in the version
 table entry by setting bits $4$ and $5$ of the entry to the
-corresponding disk location. 
+corresponding disk location.
 
 In parallel with mutator threads, one or more threads scan the page
 table of the operating system for dirty frames.  When a dirty frame
@@ -138,7 +138,7 @@ frame is saved to its associated page instance, and the dirty-bit is
 cleared.  When there are no more dirty frames corresponding to version
 $1$ pages, the set of page instances corresponding to all version $1$
 pages and version $0$ pages where no version $1$ exists represents the
-state of the system at the time of the last snapshot.  
+state of the system at the time of the last snapshot.
 
 To save the coherent state of the system to disk, the in-memory
 version table directory is scanned.  Whenever a directory entry with
@@ -164,7 +164,7 @@ The easiest way to modify a version table entry is probably to create
 a 64-byte table in memory which, for each possible version of the
 existing version table entry gives the new version.  Even though it
 would require a memory access, this table will quickly be in the
-cache, so access will be fast.  
+cache, so access will be fast.
 
 To get an idea of performance of the atomic flip, let us take a
 situation where the \emph{working set} is no bigger than the size of
@@ -179,10 +179,10 @@ can ignore the time to scan the version table directory.  To
 accomplish the flip, we then need to modify $2^{23}$ entries.  If we
 assume modified entries are adjacent, we can load and store $8$ of
 them at a time, requiring $2^{21}$ memory accesses.  If a memory
-access takes around $10$ns, the flip will take around $20$ms. 
+access takes around $10$ns, the flip will take around $20$ms.
 
 The time for a flip can be made shorter by taking more frequent
-snapshots. 
+snapshots.
 
 %%  LocalWords:  checkpointing mutator
 
@@ -207,10 +207,11 @@ example system, this page map would consist of $2^{30}$ $4$-byte
 entries, for a total of $2^{32}$ bytes of main memory.
 
 With the technique described in this section, the secondary storage
-device represents a very large \emph{queue} where each element of the
-queue is called a \emph{segment}.  Such a segment represents a unit of
-checkpointing.  New segments are added to the tail of the queue.  Old
-segments are removed from the head of the queue as described below.
+device represents a very large \emph{circular queue} where each
+element of the queue is called a \emph{segment}.  Such a segment
+represents a unit of checkpointing.  New segments are added to the
+tail of the queue.  Old segments are removed from the head of the
+queue as described below.
 
 A segment consists of a \emph{header} containing metadata about the
 contents of the segment, and of a certain number of pages that may
@@ -261,3 +262,13 @@ storage device.  Here is how the system would be booted:
   as appropriate.
 \item Jump to the entry point of the system.
 \end{enumerate}
+
+Segments are removed from the head of the queue, by a procedure called
+\emph{cleaning}.  This procedure will be described later.  For now, we
+assume that it is not present.
+
+The system maintains three buffers, each one the size of a segment.
+Two buffers are used to alternate, so that one is being written to
+secondary memory while the other one (the \emph{active one} is used to
+receive pages in main memory.  A counter $N$, with an initial value of
+$0$ is kept for the active buffer.
