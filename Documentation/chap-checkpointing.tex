@@ -270,5 +270,28 @@ assume that it is not present.
 The system maintains three buffers, each one the size of a segment.
 Two buffers are used to alternate, so that one is being written to
 secondary memory while the other one (the \emph{active one} is used to
-receive pages in main memory.  A counter $N$, with an initial value of
-$0$ is kept for the active buffer.
+receive pages in main memory.  The third buffer is used to read back
+and compare what was written to secondary storage.  Two counter, $M$
+and $N$, each with an initial value of $0$ is kept for the active
+buffer.  $M$ indicates the first free page in the active buffer, or
+equivalently, the number of pages that have already been copied to the
+buffer.  $N$ indicates the number of dirty pages that have not yet
+been copied to the buffer.  If ever $M+N$ reaches the value
+corresponding to the number of pages in the buffer (in our example,
+$250$, then a \emph{checkpoint} is triggered as described below.
+
+When a page fault occurs, a victim page is chosen using some
+standard technique, such as ``least recently used''.  If the victim
+page is clean, it is simply discarded and the page table is modified
+to reflect the change.  If the victim page is dirty, its contents is
+copied to the first free page of the active buffer, and the value of
+$M$ is incremented.
+
+All clean pages are read-only.  When an attempt is made to modify a
+page, $N$ is incremented and the page is marked as writable.
+
+As mentioned above, when $M+N$ reaches the value corresponding to the
+number of pages in the buffer, a checkpoint is triggered.  First, the
+$N$ dirty pages not yet in the buffer are copied there, and marked as
+read-only.  $M$ and $N$ are set to $0$.  The active buffer is changed
+to the alternate one.  A write to secondary storage is initiated.
