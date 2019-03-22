@@ -1,7 +1,14 @@
 \chapter{Checkpointing}
 \label{chap-checkpointing}
 
-The checkpointing mechanism described in this chapter is inspired by
+In this chapter, we describe two alternative checkpointing
+techniques.  The first one is inspired by the work on the EROS
+operating system.  The second one is based on work on log-structured
+file systems.
+
+\section{Technique inspired by EROS}
+
+The checkpointing mechanism described in this section is inspired by
 that of the EROS system.
 
 The address of an object can be considered as consisting of two parts:
@@ -178,3 +185,18 @@ The time for a flip can be made shorter by taking more frequent
 snapshots. 
 
 %%  LocalWords:  checkpointing mutator
+
+\section{Technique based on log-structured file systems}
+
+To make the description more concrete, we imagine a secondary storage
+device consisting of around $2^{30}$ pages, each containing $2^{12}$
+bytes.  Recall that \sysname{} treats primary memory as a cache for
+secondary memory.  Therefore, the pages on the secondary storage
+device can be considered as making up the complete address space of
+\sysname{}.  As such, they have unique numbers, starting at $0$.
+
+However, with the technique described in this section, the unique page
+number does not correspond to any fixed location on the secondary
+storage device.  Instead, the location of a particular page can vary
+over time.
+
