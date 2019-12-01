@@ -342,9 +342,8 @@ When every page in the head segment has been processed this way, the
 header of the active segment buffer is updated to reflect that the
 complete segment at the head of the queue has been processed and the
 following segment on the queue should be processed next.  Notice that
-there is no danger is processing pages this way more than once is
-still safe, so if a crash occurs in the middle, there is no harm
-done.
+there is no danger in processing pages this way multiple times.  Thus,
+if a crash occurs in the middle, there is no harm done.
 
 Now, let us turn our attention to performance.  Clearly, if a disk the
 size of the secondary storage device in our example is to be
