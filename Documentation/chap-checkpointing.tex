@@ -269,29 +269,85 @@ assume that it is not present.
 
 The system maintains three buffers, each one the size of a segment.
 Two buffers are used to alternate, so that one is being written to
-secondary memory while the other one (the \emph{active one} is used to
-receive pages in main memory.  The third buffer is used to read back
-and compare what was written to secondary storage.  Two counter, $M$
-and $N$, each with an initial value of $0$ is kept for the active
-buffer.  $M$ indicates the first free page in the active buffer, or
-equivalently, the number of pages that have already been copied to the
-buffer.  $N$ indicates the number of dirty pages that have not yet
-been copied to the buffer.  If ever $M+N$ reaches the value
-corresponding to the number of pages in the buffer (in our example,
-$250$, then a \emph{checkpoint} is triggered as described below.
+secondary memory while the other one (the \emph{active one}) is used
+to receive pages in main memory.  The third buffer is used to read
+back and compare what was written to secondary storage.  Two counter,
+$M$ and $N$, each with an initial value of $0$ is kept for each of two
+ordinary segment buffers.  $M$ indicates the first free page in the
+active segment buffer, or equivalently, the number of pages that have
+already been copied to the buffer.  $N$ indicates the number of dirty
+pages that have not yet been copied to the segment buffer.  If ever
+$M+N$ reaches the value corresponding to the number of pages in the
+buffer (in our example, $250$, then a \emph{checkpoint} is triggered
+as described below.
 
-When a page fault occurs, a victim page is chosen using some
-standard technique, such as ``least recently used''.  If the victim
-page is clean, it is simply discarded and the page table is modified
-to reflect the change.  If the victim page is dirty, its contents is
-copied to the first free page of the active buffer, and the value of
-$M$ is incremented.
+When a page fault occurs, a victim page is chosen using some standard
+technique, such as ``least recently used''.  If the victim page is
+clean, it is simply discarded and the page table is modified to
+reflect the change.  If the victim page is dirty, its contents is
+copied to the first free page of the active segment buffer, and the
+value of $M$ is incremented.  The unique number of the page is
+retrieved from the page table and stored in the header of the active
+segment buffer.
 
 All clean pages are read-only.  When an attempt is made to modify a
 page, $N$ is incremented and the page is marked as writable.
 
 As mentioned above, when $M+N$ reaches the value corresponding to the
-number of pages in the buffer, a checkpoint is triggered.  First, the
-$N$ dirty pages not yet in the buffer are copied there, and marked as
-read-only.  $M$ and $N$ are set to $0$.  The active buffer is changed
-to the alternate one.  A write to secondary storage is initiated.
+number of available pages in the segment buffer, a checkpoint is
+triggered.  The initial operation of a checkpoint is called an
+\emph{atomic flip} which involves two segment buffer that we shall
+call $A$ and $B$.  $A$ is the current active segment buffer with $M_A+N_A$
+having reached its ceiling and $B$ is the next one to be activated
+with its $M_B$ and $N_B$ equal to $0$.
+
+First, the $N_A$ dirty pages not yet in the buffer are
+marked as read-only.  This operation must be done atomically, i.e.,
+all executing threads must be temporarily stopped.  The active segment
+buffer is then set to segment $B$.
+
+Then the $N_A$ pages that were dirty are copied to segment buffer $A$.
+Their respective unique page numbers are retrieved from the page table
+and copied to the header of segment buffer $A$.  Once this is done,
+the entire segment $A$ is written to the end of the queue on secondary
+storage, and $M_A$ and $N_A$ are set to $0$.
+
+To avoid that the secondary storage device fills up with more and more
+checkpoint segments, an activity called \emph{cleaning} works in
+parallel with the activity described above.  Conceptually, a segment
+is read from the head of the queue and processed as follows.  The
+list of unique page numbers in the segment header is examined.  For
+each unique page number, the page map in main memory is consulted.
+There are two possible outcomes:
+
+\begin{enumerate}
+\item The location of the page as indicated by the page map is
+  different from the location in the segment being processed.  Then,
+  there is a segment further back in the queue that contains a newer
+  version of the page.  Therefore, this version of the page is
+  obsolete, and is simply discarded.
+\item The location of the page as indicated by the page map is the
+  same the location in the segment being processed.  Then, this
+  version of the page is the most recent one.  In this case, the page
+  is copied to the active segment buffer and $M$ is incremented.
+\end{enumerate}
+
+When every page in the head segment has been processed this way, the
+header of the active segment buffer is updated to reflect that the
+complete segment at the head of the queue has been processed and the
+following segment on the queue should be processed next.  Notice that
+there is no danger is processing pages this way more than once is
+still safe, so if a crash occurs in the middle, there is no harm
+done.
+
+Now, let us turn our attention to performance.  Clearly, if a disk the
+size of the secondary storage device in our example is to be
+completely read when the system boots, it will take a very long time
+indeed.  We suggest handling this problem by separating the segment
+headers from the segment pages either to two separate parts of a
+single storage device or to a second device.  Only the headers need to
+be read for a page map to be constructed in memory.  The headers are
+less than one half of a percent the size of the space occupied by
+pages in our example, so booting the system is then much faster.  Even
+better, if the segment headers are placed on a persistent solid-state
+device, they can be read much faster.
