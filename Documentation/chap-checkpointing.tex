@@ -289,11 +289,11 @@ as described below.
 
 When a page fault occurs, a victim page is chosen using some standard
 technique, such as ``least recently used''.  If the victim page is
-clean, it is simply discarded and the page table is modified to
+clean, it is simply discarded and the page map is modified to
 reflect the change.  If the victim page is dirty, its contents is
 copied to the first free page of the active segment buffer, and the
 value of $M$ is incremented.  The unique number of the page is
-retrieved from the page table and stored in the header of the active
+retrieved from the page map and stored in the header of the active
 segment buffer.
 
 All clean pages are read-only.  When an attempt is made to modify a
@@ -313,7 +313,7 @@ all executing threads must be temporarily stopped.  The active segment
 buffer is then set to segment $B$.
 
 Then the $N_A$ pages that were dirty are copied to segment buffer $A$.
-Their respective unique page numbers are retrieved from the page table
+Their respective unique page numbers are retrieved from the page map
 and copied to the header of segment buffer $A$.  Once this is done,
 the entire segment $A$ is written to the end of the queue on secondary
 storage, and $M_A$ and $N_A$ are set to $0$.
