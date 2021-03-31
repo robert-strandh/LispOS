@@ -217,7 +217,9 @@ A segment consists of:
 
 \begin{itemize}
 \item a \emph{header} containing metadata about the contents of the
-  segment, and
+  segment,
+\item all the registers of the processor, as observed when creating
+  the checkpoint, and
 \item a certain number of pages that may have been modified since the
   previous checkpoint.
 \end{itemize}
@@ -266,7 +268,8 @@ storage device.  Here is how the system would be booted:
   constructing the page map from the metadata of each segment.
 \item Load initial pages into main memory, setting up the page tables
   as appropriate.
-\item Jump to the entry point of the system.
+\item Load the registers stored in the checkpointing segment to
+  continue execution, or jump to a default entry point of the system.
 \end{enumerate}
 
 Segments are removed from the head of the queue, by a procedure called
@@ -307,16 +310,17 @@ call $A$ and $B$.  $A$ is the current active segment buffer with $M_A+N_A$
 having reached its ceiling and $B$ is the next one to be activated
 with its $M_B$ and $N_B$ equal to $0$.
 
-First, the $N_A$ dirty pages not yet in the buffer are
-marked as read-only.  This operation must be done atomically, i.e.,
-all executing threads must be temporarily stopped.  The active segment
-buffer is then set to segment $B$.
-
-Then the $N_A$ pages that were dirty are copied to segment buffer $A$.
-Their respective unique page numbers are retrieved from the page map
-and copied to the header of segment buffer $A$.  Once this is done,
-the entire segment $A$ is written to the end of the queue on secondary
-storage, and $M_A$ and $N_A$ are set to $0$.
+The flipping operation must be done atomically, i.e., all executing
+threads must be temporarily stopped.  First, the $N_A$ dirty pages not
+yet in the buffer are marked as read-only. The active segment
+buffer is then set to segment $B$.  Then the $N_A$ pages that
+were dirty are copied to segment buffer $A$.  Their respective unique page
+numbers are retrieved from the page map and copied to the header of
+segment buffer $A$.  The registers of the machine prior to flipping
+are then stored in the segment buffer.  Once this is done, previously
+stopped threads can continue execution, and the entire segment $A$ is
+written to the end of the queue on secondary storage, and $M_A$ and
+$N_A$ are set to $0$.
 
 To avoid that the secondary storage device fills up with more and more
 checkpoint segments, an activity called \emph{cleaning} works in
