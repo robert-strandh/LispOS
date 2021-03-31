@@ -90,7 +90,7 @@ A call to this generic function returns an instance of the class
 
 \Defgeneric {read-block} {disk block address}
 
-Write a block of data to the disk.  The parameter \textit{disk} is an
+Read a block of data from the disk.  The parameter \textit{disk} is an
 instance of the class \textit{disk}, and \textit{block} is a a vector
 of type \texttt{(simple-array (unsigned-byte 8) (*))}.  The size of
 \textit{block} must be a power of 2, and the address must be aligned
